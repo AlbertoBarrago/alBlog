@@ -2,8 +2,6 @@
 
 ## Table of Contents
 1. [Project Overview](#project-overview)
-2. [Folder Structure](#folder-structure)
-3. [File Descriptions](#file-descriptions)
 4. [Getting Started](#getting-started)
 
 ## Project Overview
@@ -19,10 +17,5 @@ Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
 Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
 
-## Learn more
-
-* Official website: https://www.phoenixframework.org/
-* Guides: https://hexdocs.pm/phoenix/overview.html
-* Docs: https://hexdocs.pm/phoenix
-* Forum: https://elixirforum.com/c/phoenix-forum
-* Source: https://github.com/phoenixframework/phoenix
+## Bonus 
+[🚀 Neovim + COQ + Mason + LSP: Mini Guide](https://hexdocs.pm/phoenix/overview.html)

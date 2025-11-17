@@ -3,7 +3,7 @@ defmodule SimpleCrudWeb.ArticleLive.Form do
 
   alias SimpleCrud.Blog
   alias SimpleCrud.Blog.Article
-
+  
   @impl true
   def render(assigns) do
     ~H"""
