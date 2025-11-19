@@ -1,13 +1,13 @@
-defmodule SimpleCrud.AccountsFixtures do
+defmodule Alblog.AccountsFixtures do
   @moduledoc """
   This module defines test helpers for creating
-  entities via the `SimpleCrud.Accounts` context.
+  entities via the `Alblog.Accounts` context.
   """
 
   import Ecto.Query
 
-  alias SimpleCrud.Accounts
-  alias SimpleCrud.Accounts.Scope
+  alias Alblog.Accounts
+  alias Alblog.Accounts.Scope
 
   def unique_user_email, do: "user#{System.unique_integer()}@example.com"
   def valid_user_password, do: "hello world!"
@@ -64,7 +64,7 @@ defmodule SimpleCrud.AccountsFixtures do
   end
 
   def override_token_authenticated_at(token, authenticated_at) when is_binary(token) do
-    SimpleCrud.Repo.update_all(
+    Alblog.Repo.update_all(
       from(t in Accounts.UserToken,
         where: t.token == ^token
       ),
@@ -74,14 +74,14 @@ defmodule SimpleCrud.AccountsFixtures do
 
   def generate_user_magic_link_token(user) do
     {encoded_token, user_token} = Accounts.UserToken.build_email_token(user, "login")
-    SimpleCrud.Repo.insert!(user_token)
+    Alblog.Repo.insert!(user_token)
     {encoded_token, user_token.token}
   end
 
   def offset_user_token(token, amount_to_add, unit) do
     dt = DateTime.add(DateTime.utc_now(:second), amount_to_add, unit)
 
-    SimpleCrud.Repo.update_all(
+    Alblog.Repo.update_all(
       from(ut in Accounts.UserToken, where: ut.token == ^token),
       set: [inserted_at: dt, authenticated_at: dt]
     )

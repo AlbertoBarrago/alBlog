@@ -1,11 +1,11 @@
 import Config
 
 # Configure your database
-config :simple_crud, SimpleCrud.Repo,
+config :alblog, Alblog.Repo,
   username: "postgres",
   password: "postgres",
   hostname: "localhost",
-  database: "simple_crud_dev",
+  database: "alblog_dev",
   stacktrace: true,
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
@@ -16,7 +16,7 @@ config :simple_crud, SimpleCrud.Repo,
 # The watchers configuration can be used to run external
 # watchers to your application. For example, we can use it
 # to bundle .js and .css sources.
-config :simple_crud, SimpleCrudWeb.Endpoint,
+config :alblog, AlblogWeb.Endpoint,
   # Binding to loopback ipv4 address prevents access from other machines.
   # Change to `ip: {0, 0, 0, 0}` to allow access from other machines.
   http: [ip: {127, 0, 0, 1}, port: String.to_integer(System.get_env("PORT") || "4000")],
@@ -25,8 +25,8 @@ config :simple_crud, SimpleCrudWeb.Endpoint,
   debug_errors: true,
   secret_key_base: "fxfTISSPEbp5k5onJCIKqQ2SmK5C3NkOvhRG+VVHZ4ptIn8oOFGq0V1WxcImH8ma",
   watchers: [
-    esbuild: {Esbuild, :install_and_run, [:simple_crud, ~w(--sourcemap=inline --watch)]},
-    tailwind: {Tailwind, :install_and_run, [:simple_crud, ~w(--watch)]}
+    esbuild: {Esbuild, :install_and_run, [:alblog, ~w(--sourcemap=inline --watch)]},
+    tailwind: {Tailwind, :install_and_run, [:alblog, ~w(--watch)]}
   ]
 
 # ## SSL Support
@@ -53,18 +53,18 @@ config :simple_crud, SimpleCrudWeb.Endpoint,
 # different ports.
 
 # Watch static and templates for browser reloading.
-config :simple_crud, SimpleCrudWeb.Endpoint,
+config :alblog, AlblogWeb.Endpoint,
   live_reload: [
     web_console_logger: true,
     patterns: [
       ~r"priv/static/(?!uploads/).*(js|css|png|jpeg|jpg|gif|svg)$",
       ~r"priv/gettext/.*(po)$",
-      ~r"lib/simple_crud_web/(?:controllers|live|components|router)/?.*\.(ex|heex)$"
+      ~r"lib/alblog_web/(?:controllers|live|components|router)/?.*\.(ex|heex)$"
     ]
   ]
 
 # Enable dev routes for dashboard and mailbox
-config :simple_crud, dev_routes: true
+config :alblog, dev_routes: true
 
 # Do not include metadata nor timestamps in development logs
 config :logger, :default_formatter, format: "[$level] $message\n"

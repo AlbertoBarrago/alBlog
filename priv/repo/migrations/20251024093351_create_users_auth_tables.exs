@@ -1,4 +1,4 @@
-defmodule SimpleCrud.Repo.Migrations.CreateUsersAuthTables do
+defmodule Alblog.Repo.Migrations.CreateUsersAuthTables do
   use Ecto.Migration
 
   def change do

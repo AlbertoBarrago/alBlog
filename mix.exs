@@ -1,9 +1,9 @@
-defmodule SimpleCrud.MixProject do
+defmodule Alblog.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :simple_crud,
+      app: :alblog,
       version: "0.1.0",
       elixir: "~> 1.15",
       elixirc_paths: elixirc_paths(Mix.env()),
@@ -20,7 +20,7 @@ defmodule SimpleCrud.MixProject do
   # Type `mix help compile.app` for more information.
   def application do
     [
-      mod: {SimpleCrud.Application, []},
+      mod: {Alblog.Application, []},
       extra_applications: [:logger, :runtime_tools]
     ]
   end
@@ -83,10 +83,10 @@ defmodule SimpleCrud.MixProject do
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
       "assets.setup": ["tailwind.install --if-missing", "esbuild.install --if-missing"],
-      "assets.build": ["compile", "tailwind simple_crud", "esbuild simple_crud"],
+      "assets.build": ["compile", "tailwind alblog", "esbuild alblog"],
       "assets.deploy": [
-        "tailwind simple_crud --minify",
-        "esbuild simple_crud --minify",
+        "tailwind alblog --minify",
+        "esbuild alblog --minify",
         "phx.digest"
       ],
       precommit: ["compile --warning-as-errors", "deps.unlock --unused", "format", "test"]

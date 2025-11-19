@@ -1,13 +1,11 @@
-# SimpleCrud Study Repository
+# Alblog Study Repository
 
 ## Table of Contents
 1. [Project Overview](#project-overview)
-2. [Folder Structure](#folder-structure)
-3. [File Descriptions](#file-descriptions)
 4. [Getting Started](#getting-started)
 
 ## Project Overview
-This repository is a study project for SimpleCrud functionality in Phoenix Framework.
+This repository is a study project for Alblog functionality in Phoenix Framework.
 
 ## Getting Started
 To run the project, follow these steps:
@@ -19,10 +17,5 @@ Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
 Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
 
-## Learn more
-
-* Official website: https://www.phoenixframework.org/
-* Guides: https://hexdocs.pm/phoenix/overview.html
-* Docs: https://hexdocs.pm/phoenix
-* Forum: https://elixirforum.com/c/phoenix-forum
-* Source: https://github.com/phoenixframework/phoenix
+## Bonus 
+[🚀 Neovim + COQ + Mason + LSP: Mini Guide](https://hexdocs.pm/phoenix/overview.html)

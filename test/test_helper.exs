@@ -1,2 +1,2 @@
 ExUnit.start()
-Ecto.Adapters.SQL.Sandbox.mode(SimpleCrud.Repo, :manual)
+Ecto.Adapters.SQL.Sandbox.mode(Alblog.Repo, :manual)
