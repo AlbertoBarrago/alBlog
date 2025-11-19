@@ -1,7 +1,7 @@
-defmodule SimpleCrud.BlogFixtures do
+defmodule Alblog.BlogFixtures do
   @moduledoc """
   This module defines test helpers for creating
-  entities via the `SimpleCrud.Blog` context.
+  entities via the `Alblog.Blog` context.
   """
 
   @doc """
@@ -22,7 +22,7 @@ defmodule SimpleCrud.BlogFixtures do
         title: "some title"
       })
 
-    {:ok, article} = SimpleCrud.Blog.create_article(scope, attrs)
+    {:ok, article} = Alblog.Blog.create_article(scope, attrs)
     article
   end
 end

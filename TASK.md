@@ -1,7 +1,7 @@
-# Phoenix Framework Study Tasks - SimpleCrud Project
+# Phoenix Framework Study Tasks - Alblog Project
 
 ## 🎯 Overview
-This document contains **7 essential tasks** to help you master the **Phoenix Framework** through hands-on development of a SimpleCrud application. Each task builds upon the previous one, introducing core Phoenix concepts progressively.
+This document contains **7 essential tasks** to help you master the **Phoenix Framework** through hands-on development of a Alblog application. Each task builds upon the previous one, introducing core Phoenix concepts progressively.
 
 ## 📚 Learning Objectives
 By completing these 7 tasks, you will understand:
@@ -23,7 +23,7 @@ By completing these 7 tasks, you will understand:
 - Learn Ecto migrations
 
 **Steps:**
-1. Explore the `lib/` directory structure and understand the separation between `simple_crud` (context) and `simple_crud_web` (web layer)
+1. Explore the `lib/` directory structure and understand the separation between `alblog` (context) and `alblog_web` (web layer)
 2. Design a `Product` schema with fields: `name` (string), `description` (text), `price` (decimal), `category` (string), `in_stock` (boolean)
 3. Generate and run an Ecto migration: `mix phx.gen.schema Products.Product products name:string description:text price:decimal category:string in_stock:boolean`
 4. Run `mix ecto.migrate` to create the table
@@ -41,10 +41,10 @@ By completing these 7 tasks, you will understand:
 - Display data with HEEx templates
 
 **Steps:**
-1. Create `lib/simple_crud_web/live/product_live.ex` with a basic LiveView module
+1. Create `lib/alblog_web/live/product_live.ex` with a basic LiveView module
 2. Implement the `mount/3` callback to load all products from the database
 3. Create a template to display products in a clean table format
-4. Add the route to `lib/simple_crud_web/router.ex`: `live "/products", ProductLive`
+4. Add the route to `lib/alblog_web/router.ex`: `live "/products", ProductLive`
 5. Style the table with Tailwind CSS classes
 
 **Success Criteria:** You can visit `/products` and see a list of products (even if empty initially)

@@ -1,11 +1,11 @@
-# SimpleCrud Study Repository
+# Alblog Study Repository
 
 ## Table of Contents
 1. [Project Overview](#project-overview)
 4. [Getting Started](#getting-started)
 
 ## Project Overview
-This repository is a study project for SimpleCrud functionality in Phoenix Framework.
+This repository is a study project for Alblog functionality in Phoenix Framework.
 
 ## Getting Started
 To run the project, follow these steps:

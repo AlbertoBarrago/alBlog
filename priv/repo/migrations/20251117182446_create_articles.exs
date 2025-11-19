@@ -1,4 +1,4 @@
-defmodule SimpleCrud.Repo.Migrations.CreateArticles do
+defmodule Alblog.Repo.Migrations.CreateArticles do
   use Ecto.Migration
 
   def change do
