@@ -20,20 +20,24 @@ defmodule AlblogWeb.ArticleLive.Index do
         <div
           :for={{id, article} <- @streams.articles}
           id={id}
-          class="bg-white overflow-hidden shadow-lg rounded-xl flex flex-col transition duration-300 hover:shadow-2xl"
+          class="bg-base-100 overflow-hidden shadow-lg rounded-xl flex flex-col transition duration-300 hover:shadow-2xl"
         >
           <div class="px-6 py-8 flex-grow">
-            <div class="flex justify-between items-start mb-4">
-              <h3 class="text-2xl font-bold text-gray-900 leading-tight">
-                <.link navigate={~p"/articles/#{article}"} class="hover:text-indigo-600 transition">
+            <div class="mb-4">
+              <h3 class="text-2xl font-bold text-base-content leading-tight mb-2">
+                <.link navigate={~p"/articles/#{article}"} class="hover:text-primary transition">
                   {article.title}
                 </.link>
               </h3>
-              <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-indigo-50 text-indigo-700">
-                {article.category}
-              </span>
+              <div class="flex flex-wrap gap-2">
+                <%= for tag <- article.category || [] do %>
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary">
+                    {tag}
+                  </span>
+                <% end %>
+              </div>
             </div>
-            <div class="mb-4 text-sm text-gray-500 flex items-center">
+            <div class="mb-4 text-sm text-base-content/60 flex items-center">
               <svg class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path
                   stroke-linecap="round"
@@ -44,28 +48,28 @@ defmodule AlblogWeb.ArticleLive.Index do
               </svg>
               {article.published_at}
             </div>
-            <div class="text-gray-600 leading-relaxed line-clamp-4">
-              {article.content}
+            <div class="text-base-content/80 leading-relaxed line-clamp-4 prose prose-sm max-w-none">
+              {Earmark.as_html!(article.content || "") |> Phoenix.HTML.raw()}
             </div>
           </div>
-          <div class="bg-gray-50 px-6 py-4 flex justify-between items-center border-t border-gray-100">
+          <div class="bg-base-200 px-6 py-4 flex justify-between items-center border-t border-base-300">
             <.link
               navigate={~p"/articles/#{article}"}
-              class="text-base font-semibold text-indigo-600 hover:text-indigo-500 transition flex items-center"
+              class="text-base font-semibold text-primary hover:text-primary-focus transition flex items-center"
             >
               Read full article <span aria-hidden="true" class="ml-1">&rarr;</span>
             </.link>
             <div class="flex space-x-4">
               <.link
                 navigate={~p"/articles/#{article}/edit"}
-                class="text-sm font-medium text-gray-500 hover:text-gray-700 transition"
+                class="text-sm font-medium text-base-content/60 hover:text-base-content transition"
               >
                 Edit
               </.link>
               <.link
                 phx-click={JS.push("delete", value: %{id: article.id}) |> hide("##{id}")}
                 data-confirm="Are you sure?"
-                class="text-sm font-medium text-red-500 hover:text-red-700 transition"
+                class="text-sm font-medium text-error hover:text-error-content transition"
               >
                 Delete
               </.link>

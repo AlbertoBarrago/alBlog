@@ -5,9 +5,7 @@ defmodule AlblogWeb.ArticleLive.ShowPublicTest do
   import Alblog.BlogFixtures
 
   @create_attrs %{
-    title: "some title",
-    category: "some category",
-    slug: "some slug",
+    category: ["some category"],
     content: "some content",
     published_at: "2025-11-16T18:24:00Z"
   }

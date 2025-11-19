@@ -9,7 +9,7 @@ defmodule Alblog.BlogTest do
     import Alblog.AccountsFixtures, only: [user_scope_fixture: 0]
     import Alblog.BlogFixtures
 
-    @invalid_attrs %{title: nil, category: nil, slug: nil, content: nil, published_at: nil}
+    @invalid_attrs %{title: nil, content: nil}
 
     test "list_articles/1 returns all scoped articles" do
       scope = user_scope_fixture()
@@ -31,8 +31,7 @@ defmodule Alblog.BlogTest do
     test "create_article/2 with valid data creates a article" do
       valid_attrs = %{
         title: "some title",
-        category: "some category",
-        slug: "some slug",
+        category: ["some category"],
         content: "some content",
         published_at: ~U[2025-11-16 18:24:00Z]
       }
@@ -41,8 +40,8 @@ defmodule Alblog.BlogTest do
 
       assert {:ok, %Article{} = article} = Blog.create_article(scope, valid_attrs)
       assert article.title == "some title"
-      assert article.category == "some category"
-      assert article.slug == "some slug"
+      assert article.category == ["some category"]
+      assert article.slug == "some-title"
       assert article.content == "some content"
       assert article.published_at == ~U[2025-11-16 18:24:00Z]
       assert article.user_id == scope.user.id
@@ -59,16 +58,15 @@ defmodule Alblog.BlogTest do
 
       update_attrs = %{
         title: "some updated title",
-        category: "some updated category",
-        slug: "some updated slug",
+        category: ["some updated category"],
         content: "some updated content",
         published_at: ~U[2025-11-17 18:24:00Z]
       }
 
       assert {:ok, %Article{} = article} = Blog.update_article(scope, article, update_attrs)
       assert article.title == "some updated title"
-      assert article.category == "some updated category"
-      assert article.slug == "some updated slug"
+      assert article.category == ["some updated category"]
+      assert article.slug == "some-updated-title"
       assert article.content == "some updated content"
       assert article.published_at == ~U[2025-11-17 18:24:00Z]
     end

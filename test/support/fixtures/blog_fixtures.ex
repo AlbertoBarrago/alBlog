@@ -15,11 +15,11 @@ defmodule Alblog.BlogFixtures do
   def article_fixture(scope, attrs \\ %{}) do
     attrs =
       Enum.into(attrs, %{
-        category: "some category",
+        category: ["some category"],
         content: "some content",
         published_at: ~U[2025-11-16 18:24:00Z],
         slug: unique_article_slug(),
-        title: "some title"
+        title: "some title#{System.unique_integer([:positive])}"
       })
 
     {:ok, article} = Alblog.Blog.create_article(scope, attrs)

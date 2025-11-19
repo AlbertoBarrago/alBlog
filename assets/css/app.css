@@ -100,9 +100,13 @@
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
 /* Make LiveView wrapper divs transparent for layout */
-[data-phx-session], [data-phx-teleported-src] { display: contents }
+[data-phx-session],
+[data-phx-teleported-src] {
+  display: contents
+}
 
-*, body {
+*,
+body {
   font-family: "Roboto", sans-serif;
   font-optical-sizing: auto;
   font-weight: 100;
@@ -110,4 +114,101 @@
   font-variation-settings:
     "wdth" 100;
 }
+
 /* This file is for your main application CSS */
+
+/* Code block styling for markdown */
+.prose pre {
+  @apply bg-base-300 rounded-lg p-4 overflow-x-auto my-4;
+}
+
+.prose code {
+  @apply font-mono text-sm;
+}
+
+.prose pre code {
+  @apply bg-transparent p-0 text-base-content;
+}
+
+.prose :not(pre)>code {
+  @apply bg-base-200 px-1.5 py-0.5 rounded text-primary font-semibold;
+}
+
+/* Ensure code blocks work in dark mode */
+[data-theme="dark"] .prose pre {
+  @apply bg-base-300 border border-base-content/10;
+}
+
+[data-theme="dark"] .prose :not(pre)>code {
+  @apply bg-base-300 text-primary;
+}
+
+/* Light mode specific adjustments */
+[data-theme="light"] .prose pre {
+  @apply bg-base-200 border border-base-300;
+}
+
+
+[data-theme="light"] .prose :not(pre)>code {
+  @apply bg-base-200 text-primary;
+}
+
+/* Enhanced heading styles for markdown */
+.prose h1 {
+  @apply font-extrabold text-base-content border-b-2 border-primary/30 pb-3 mb-6 mt-8;
+}
+
+.prose h2 {
+  @apply font-bold text-base-content border-b-2 border-base-content/20 pb-2 mb-5 mt-7;
+}
+
+.prose h3 {
+  @apply font-bold text-base-content border-b border-base-content/10 pb-2 mb-4 mt-6;
+}
+
+.prose h4 {
+  @apply font-semibold text-base-content pb-1 mb-3 mt-5;
+}
+
+/* Enhanced blockquote styles for markdown */
+.prose blockquote {
+  @apply border-l-4 border-primary/50 bg-base-200/50 pl-4 pr-4 py-3 my-4 italic text-base-content/80 rounded-r;
+}
+
+.prose blockquote p {
+  @apply my-2;
+}
+
+/* Dark mode specific adjustments for headings and blockquotes */
+[data-theme="dark"] .prose h1 {
+  @apply border-primary/40;
+}
+
+[data-theme="dark"] .prose h2 {
+  @apply border-base-content/15;
+}
+
+[data-theme="dark"] .prose h3 {
+  @apply border-base-content/10;
+}
+
+[data-theme="dark"] .prose blockquote {
+  @apply border-primary/60 bg-base-200/30;
+}
+
+/* Light mode specific adjustments for headings and blockquotes */
+[data-theme="light"] .prose h1 {
+  @apply border-primary/25;
+}
+
+[data-theme="light"] .prose h2 {
+  @apply border-base-content/15;
+}
+
+[data-theme="light"] .prose h3 {
+  @apply border-base-content/10;
+}
+
+[data-theme="light"] .prose blockquote {
+  @apply border-primary/40 bg-base-200/60;
+}

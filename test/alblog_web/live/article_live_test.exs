@@ -4,21 +4,7 @@ defmodule AlblogWeb.ArticleLiveTest do
   import Phoenix.LiveViewTest
   import Alblog.BlogFixtures
 
-  @create_attrs %{
-    title: "some title",
-    category: "some category",
-    slug: "some slug",
-    content: "some content",
-    published_at: "2025-11-16T18:24:00Z"
-  }
-  @update_attrs %{
-    title: "some updated title",
-    category: "some updated category",
-    slug: "some updated slug",
-    content: "some updated content",
-    published_at: "2025-11-17T18:24:00Z"
-  }
-  @invalid_attrs %{title: nil, category: nil, slug: nil, content: nil, published_at: nil}
+  @invalid_attrs %{title: nil, content: nil}
 
   setup :register_and_log_in_user
 
@@ -53,9 +39,14 @@ defmodule AlblogWeb.ArticleLiveTest do
              |> form("#article-form", article: @invalid_attrs)
              |> render_change() =~ "can&#39;t be blank"
 
+      _ =
+        form_live
+        |> element("input[name=tag_input]")
+        |> render_keydown(%{"key" => "Enter", "value" => "some category"})
+
       assert {:ok, index_live, _html} =
                form_live
-               |> form("#article-form", article: @create_attrs)
+               |> form("#article-form", article: %{title: "some title", content: "some content"})
                |> render_submit()
                |> follow_redirect(conn, ~p"/articles")
 
@@ -79,9 +70,16 @@ defmodule AlblogWeb.ArticleLiveTest do
              |> form("#article-form", article: @invalid_attrs)
              |> render_change() =~ "can&#39;t be blank"
 
+      _ =
+        form_live
+        |> element("input[name=tag_input]")
+        |> render_keydown(%{"key" => "Enter", "value" => "some updated category"})
+
       assert {:ok, index_live, _html} =
                form_live
-               |> form("#article-form", article: @update_attrs)
+               |> form("#article-form",
+                 article: %{title: "some updated title", content: "some updated content"}
+               )
                |> render_submit()
                |> follow_redirect(conn, ~p"/articles")
 

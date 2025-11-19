@@ -77,8 +77,8 @@ defmodule AlblogWeb.ArticleLive.ShowPublic do
           </h1>
         </div>
 
-        <div class="mt-8 text-base-content/80 leading-relaxed">
-          {@article.content}
+        <div class="mt-8 text-base-content/80 leading-relaxed prose prose-lg max-w-none">
+          {Earmark.as_html!(@article.content || "") |> Phoenix.HTML.raw()}
         </div>
       </article>
 

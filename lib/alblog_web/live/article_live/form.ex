@@ -14,11 +14,92 @@ defmodule AlblogWeb.ArticleLive.Form do
       </.header>
 
       <.form for={@form} id="article-form" phx-change="validate" phx-submit="save">
-        <.input field={@form[:title]} type="textarea" label="Title" />
-        <.input field={@form[:slug]} type="textarea" label="Slug" />
-        <.input field={@form[:content]} type="textarea" label="Content" />
+        <.input field={@form[:title]} type="text" label="Title" />
+        <.input field={@form[:slug]} type="text" label="Slug" disabled />
+
+        <div class="fieldset mb-2">
+          <label>
+            <div class="flex items-center justify-between mb-1">
+              <span class="label">Content</span>
+              <button
+                type="button"
+                phx-click="toggle_preview"
+                disabled={!@form[:content].value || @form[:content].value == ""}
+                class={[
+                  "text-sm font-medium transition-colors",
+                  (!@form[:content].value || @form[:content].value == "") &&
+                    "text-base-content/40 cursor-not-allowed",
+                  @form[:content].value && @form[:content].value != "" &&
+                    "text-primary hover:text-primary-focus"
+                ]}
+              >
+                {if @preview_mode, do: "Edit", else: "Preview"}
+              </button>
+            </div>
+            <%= if @preview_mode do %>
+              <div class="prose prose-slate max-w-none p-4 border rounded-md bg-base-100 min-h-[16rem]">
+                {Earmark.as_html!(@form[:content].value || "") |> Phoenix.HTML.raw()}
+              </div>
+              <input type="hidden" name={@form[:content].name} value={@form[:content].value} />
+            <% else %>
+              <textarea
+                id={@form[:content].id}
+                name={@form[:content].name}
+                class="textarea textarea-bordered w-full h-64"
+              ><%= Phoenix.HTML.Form.normalize_value("textarea", @form[:content].value) %></textarea>
+            <% end %>
+          </label>
+          <%= for error <- @form[:content].errors do %>
+            <p class="mt-1.5 flex gap-2 items-center text-sm text-error">
+              <.icon name="hero-exclamation-circle" class="size-5" />
+              {translate_error(error)}
+            </p>
+          <% end %>
+        </div>
+
         <.input field={@form[:published_at]} type="datetime-local" label="Published at" />
-        <.input field={@form[:category]} type="text" label="Category" />
+
+        <div class="fieldset mb-2">
+          <label>
+            <span class="label mb-1">Categories (Tags)</span>
+            <%= if @tags != [] do %>
+              <div class="flex flex-wrap gap-2 mb-1">
+                <%= for tag <- @tags do %>
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                    {tag}
+                    <button
+                      type="button"
+                      phx-click="remove_tag"
+                      phx-value-tag={tag}
+                      class="ml-1.5 inline-flex items-center justify-center text-blue-400 hover:text-blue-600 focus:outline-none"
+                    >
+                      <span class="sr-only">Remove tag</span>
+                      <svg class="h-3 w-3" fill="currentColor" viewBox="0 0 20 20">
+                        <path
+                          fill-rule="evenodd"
+                          d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L10 10 5.707 5.707a1 1 0 010-1.414z"
+                          clip-rule="evenodd"
+                        />
+                      </svg>
+                    </button>
+                  </span>
+                  <input type="hidden" name="article[category][]" value={tag} />
+                <% end %>
+              </div>
+            <% end %>
+            <input type="hidden" name="article[category][]" value="" />
+            <input
+              type="text"
+              name="tag_input"
+              value={@current_tag}
+              phx-keydown="handle_key"
+              phx-change="update_tag_input"
+              placeholder="Type and press Space or Tab to add tag"
+              class="input input-bordered w-full text-base-content"
+            />
+          </label>
+        </div>
+
         <footer>
           <.button phx-disable-with="Saving..." variant="primary">Save Article</.button>
           <.button navigate={return_path(@current_scope, @return_to, @article)}>Cancel</.button>
@@ -33,6 +114,8 @@ defmodule AlblogWeb.ArticleLive.Form do
     {:ok,
      socket
      |> assign(:return_to, return_to(params["return_to"]))
+     |> assign(:current_tag, "")
+     |> assign(:preview_mode, false)
      |> apply_action(socket.assigns.live_action, params)}
   end
 
@@ -45,24 +128,86 @@ defmodule AlblogWeb.ArticleLive.Form do
     socket
     |> assign(:page_title, "Edit Article")
     |> assign(:article, article)
+    |> assign(:tags, article.category || [])
     |> assign(:form, to_form(Blog.change_article(socket.assigns.current_scope, article)))
   end
 
   defp apply_action(socket, :new, _params) do
-    article = %Article{user_id: socket.assigns.current_scope.user.id}
+    article = %Article{
+      user_id: socket.assigns.current_scope.user.id,
+      published_at: DateTime.truncate(DateTime.utc_now(), :second)
+    }
 
     socket
     |> assign(:page_title, "New Article")
     |> assign(:article, article)
+    |> assign(:tags, [])
     |> assign(:form, to_form(Blog.change_article(socket.assigns.current_scope, article)))
   end
 
   @impl true
-  def handle_event("validate", %{"article" => article_params}, socket) do
+  def handle_event("validate", %{"article" => article_params} = params, socket) do
+    # Keep the current tag input value if it exists in params
+    current_tag = params["tag_input"] || socket.assigns.current_tag
+
     changeset =
       Blog.change_article(socket.assigns.current_scope, socket.assigns.article, article_params)
 
-    {:noreply, assign(socket, form: to_form(changeset, action: :validate))}
+    {:noreply,
+     socket
+     |> assign(form: to_form(changeset, action: :validate))
+     |> assign(current_tag: current_tag)}
+  end
+
+  def handle_event("update_tag_input", %{"tag_input" => value}, socket) do
+    {:noreply, assign(socket, current_tag: value)}
+  end
+
+  def handle_event("handle_key", %{"key" => key, "value" => value}, socket)
+      when key in [" ", "Tab", "Enter"] do
+    tag = String.trim(value)
+
+    if tag != "" and tag not in socket.assigns.tags do
+      new_tags = socket.assigns.tags ++ [tag]
+
+      # Update the changeset with new tags
+      article_params =
+        (socket.assigns.form.params || %{})
+        |> Map.put("category", new_tags)
+
+      changeset =
+        Blog.change_article(socket.assigns.current_scope, socket.assigns.article, article_params)
+
+      {:noreply,
+       socket
+       |> assign(:tags, new_tags)
+       |> assign(:current_tag, "")
+       |> assign(:form, to_form(changeset))}
+    else
+      {:noreply, assign(socket, current_tag: "")}
+    end
+  end
+
+  def handle_event("handle_key", _, socket), do: {:noreply, socket}
+
+  def handle_event("remove_tag", %{"tag" => tag_to_remove}, socket) do
+    new_tags = List.delete(socket.assigns.tags, tag_to_remove)
+
+    article_params =
+      (socket.assigns.form.params || %{})
+      |> Map.put("category", new_tags)
+
+    changeset =
+      Blog.change_article(socket.assigns.current_scope, socket.assigns.article, article_params)
+
+    {:noreply,
+     socket
+     |> assign(:tags, new_tags)
+     |> assign(:form, to_form(changeset))}
+  end
+
+  def handle_event("toggle_preview", _, socket) do
+    {:noreply, assign(socket, preview_mode: not socket.assigns.preview_mode)}
   end
 
   def handle_event("save", %{"article" => article_params}, socket) do
