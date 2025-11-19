@@ -76,7 +76,7 @@ defmodule Alblog.Accounts do
   """
   def register_user(attrs) do
     %User{}
-    |> User.email_changeset(attrs)
+    |> User.registration_changeset(attrs)
     |> Repo.insert()
   end
 
@@ -109,6 +109,28 @@ defmodule Alblog.Accounts do
   """
   def change_user_email(user, attrs \\ %{}, opts \\ []) do
     User.email_changeset(user, attrs, opts)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for changing the user username.
+
+  ## Examples
+
+      iex> change_user_username(user)
+      %Ecto.Changeset{data: %User{}}
+
+  """
+  def change_user_username(user, attrs \\ %{}, opts \\ []) do
+    User.username_changeset(user, attrs, opts)
+  end
+
+  @doc """
+  Updates the user username.
+  """
+  def update_user_username(user, attrs) do
+    user
+    |> User.username_changeset(attrs)
+    |> Repo.update()
   end
 
   @doc """

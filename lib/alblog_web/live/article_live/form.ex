@@ -62,19 +62,26 @@ defmodule AlblogWeb.ArticleLive.Form do
         <div class="fieldset mb-2">
           <label>
             <span class="label mb-1">Categories (Tags)</span>
-            <%= if @tags != [] do %>
-              <div class="flex flex-wrap gap-2 mb-1">
-                <%= for tag <- @tags do %>
-                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+            <div class="input input-bordered w-full min-h-[2.5rem] h-auto flex flex-wrap items-center gap-2 p-2 focus-within:outline-2 focus-within:outline-primary">
+              <%= if @tags != [] do %>
+                <%= for {tag, index} <- Enum.with_index(@tags) do %>
+                  <span class={[
+                    "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium transition-all",
+                    case rem(index, 3) do
+                      0 -> "bg-primary text-primary-content"
+                      1 -> "bg-info text-info-content"
+                      2 -> "bg-success text-success-content"
+                    end
+                  ]}>
                     {tag}
                     <button
                       type="button"
                       phx-click="remove_tag"
                       phx-value-tag={tag}
-                      class="ml-1.5 inline-flex items-center justify-center text-blue-400 hover:text-blue-600 focus:outline-none"
+                      class="inline-flex items-center justify-center hover:bg-base-content/20 rounded-full p-0.5 transition-colors focus:outline-none"
                     >
                       <span class="sr-only">Remove tag</span>
-                      <svg class="h-3 w-3" fill="currentColor" viewBox="0 0 20 20">
+                      <svg class="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 20 20">
                         <path
                           fill-rule="evenodd"
                           d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L10 10 5.707 5.707a1 1 0 010-1.414z"
@@ -85,22 +92,22 @@ defmodule AlblogWeb.ArticleLive.Form do
                   </span>
                   <input type="hidden" name="article[category][]" value={tag} />
                 <% end %>
-              </div>
-            <% end %>
-            <input type="hidden" name="article[category][]" value="" />
-            <input
-              type="text"
-              name="tag_input"
-              value={@current_tag}
-              phx-keydown="handle_key"
-              phx-change="update_tag_input"
-              placeholder="Type and press Space or Tab to add tag"
-              class="input input-bordered w-full text-base-content"
-            />
+              <% end %>
+              <input type="hidden" name="article[category][]" value="" />
+              <input
+                type="text"
+                name="tag_input"
+                value={@current_tag}
+                phx-keydown="handle_key"
+                phx-change="update_tag_input"
+                placeholder={if @tags == [], do: "Type and press Space or Tab to add tag", else: ""}
+                class="flex-1 min-w-[120px] outline-none bg-transparent text-base-content border-none focus:ring-0 p-0"
+              />
+            </div>
           </label>
         </div>
 
-        <footer>
+        <footer class="mt-4 flex gap-3">
           <.button phx-disable-with="Saving..." variant="primary">Save Article</.button>
           <.button navigate={return_path(@current_scope, @return_to, @article)}>Cancel</.button>
         </footer>

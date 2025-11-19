@@ -30,32 +30,32 @@
       <ul class="flex items-center gap-4 py-3">
         <%= if @current_scope do %>
           <li class="text-sm font-semibold text-primary">
-            {@current_scope.user.email}
+            @{@current_scope.user.username || @current_scope.user.email}
           </li>
           <li>
             <.link
               href={~p"/articles"}
               class="text-base-content hover:text-primary transition"
             >
-              Settings
+              Articles
             </.link>
           </li>
- 
+
           <li>
             <.link
               href={~p"/users/settings"}
-              class="text-base-content hover:text-primary transition"
+              class="text-base-content hover:text-primary transition flex items-center gap-1.5"
             >
-              Settings
+              <.icon name="hero-cog-6-tooth" class="w-5 h-5" /> Settings
             </.link>
           </li>
           <li>
             <.link
               href={~p"/users/log-out"}
               method="delete"
-              class="text-base-content hover:text-error transition"
+              class="text-base-content hover:text-error transition flex items-center gap-1.5"
             >
-              Log out
+              <.icon name="hero-arrow-right-on-rectangle" class="w-5 h-5" />
             </.link>
           </li>
         <% else %>

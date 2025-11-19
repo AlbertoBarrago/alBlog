@@ -12,9 +12,27 @@ defmodule AlblogWeb.UserLive.Settings do
       <div class="text-center">
         <.header>
           Account Settings
-          <:subtitle>Manage your account email address and password settings</:subtitle>
+          <:subtitle>Manage your username, email address and password settings</:subtitle>
         </.header>
       </div>
+
+      <.form
+        for={@username_form}
+        id="username_form"
+        phx-submit="update_username"
+        phx-change="validate_username"
+      >
+        <.input
+          field={@username_form[:username]}
+          type="text"
+          label="Username"
+          autocomplete="off"
+          required
+        />
+        <.button variant="primary" phx-disable-with="Changing...">Change Username</.button>
+      </.form>
+
+      <div class="divider" />
 
       <.form for={@email_form} id="email_form" phx-submit="update_email" phx-change="validate_email">
         <.input
@@ -82,12 +100,14 @@ defmodule AlblogWeb.UserLive.Settings do
 
   def mount(_params, _session, socket) do
     user = socket.assigns.current_scope.user
+    username_changeset = Accounts.change_user_username(user, %{}, validate_unique: false)
     email_changeset = Accounts.change_user_email(user, %{}, validate_unique: false)
     password_changeset = Accounts.change_user_password(user, %{}, hash_password: false)
 
     socket =
       socket
       |> assign(:current_email, user.email)
+      |> assign(:username_form, to_form(username_changeset))
       |> assign(:email_form, to_form(email_changeset))
       |> assign(:password_form, to_form(password_changeset))
       |> assign(:trigger_submit, false)
@@ -96,6 +116,33 @@ defmodule AlblogWeb.UserLive.Settings do
   end
 
   @impl true
+  def handle_event("validate_username", params, socket) do
+    %{"user" => user_params} = params
+
+    username_form =
+      socket.assigns.current_scope.user
+      |> Accounts.change_user_username(user_params, validate_unique: false)
+      |> Map.put(:action, :validate)
+      |> to_form()
+
+    {:noreply, assign(socket, username_form: username_form)}
+  end
+
+  def handle_event("update_username", params, socket) do
+    %{"user" => user_params} = params
+    user = socket.assigns.current_scope.user
+    true = Accounts.sudo_mode?(user)
+
+    case Accounts.update_user_username(user, user_params) do
+      {:ok, _user} ->
+        info = "Username updated successfully."
+        {:noreply, socket |> put_flash(:info, info) |> push_navigate(to: ~p"/users/settings")}
+
+      {:error, changeset} ->
+        {:noreply, assign(socket, :username_form, to_form(changeset, action: :insert))}
+    end
+  end
+
   def handle_event("validate_email", params, socket) do
     %{"user" => user_params} = params
 

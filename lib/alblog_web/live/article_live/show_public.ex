@@ -61,21 +61,23 @@ defmodule AlblogWeb.ArticleLive.ShowPublic do
       </div>
 
       <article class="prose prose-lg prose-slate dark:prose-invert mx-auto">
-        <div class="not-prose mb-8 border-b border-base-300 pb-8">
-          <div class="flex items-center gap-3 text-sm text-base-content/60 mb-4">
-            <time datetime={@article.published_at}>
-              {Calendar.strftime(@article.published_at || DateTime.utc_now(), "%B %d, %Y")}
-            </time>
-            <span>•</span>
-            <span class="badge badge-primary badge-outline">
-              {@article.category || "Uncategorized"}
-            </span>
+        <div class="flex items-center gap-3 text-sm text-base-content/60 mb-4">
+          <time datetime={@article.published_at}>
+            {Calendar.strftime(@article.published_at || DateTime.utc_now(), "%B %d, %Y")}
+          </time>
+          <span>•</span>
+          <div class="flex gap-1.5">
+            <%= for tag <- @article.category do %>
+              <span class="badge badge-primary badge-sm">
+                {tag}
+              </span>
+            <% end %>
           </div>
-
-          <h1 class="text-4xl font-extrabold tracking-tight text-base-content sm:text-5xl mb-4">
-            {@article.title}
-          </h1>
         </div>
+
+        <h1 class="text-4xl font-extrabold tracking-tight text-base-content sm:text-5xl mb-4">
+          {@article.title}
+        </h1>
 
         <div class="mt-8 text-base-content/80 leading-relaxed prose prose-lg max-w-none">
           {Earmark.as_html!(@article.content || "") |> Phoenix.HTML.raw()}

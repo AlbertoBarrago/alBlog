@@ -4,12 +4,58 @@ defmodule Alblog.Accounts.User do
 
   schema "users" do
     field :email, :string
+    field :username, :string
     field :password, :string, virtual: true, redact: true
     field :hashed_password, :string, redact: true
     field :confirmed_at, :utc_datetime
     field :authenticated_at, :utc_datetime, virtual: true
 
     timestamps(type: :utc_datetime)
+  end
+
+  @doc """
+  A user changeset for registration.
+
+  It is important to validate the length of both email and password.
+  Otherwise databases may truncate the email without warnings, which
+  could lead to unpredictable or insecure behaviour. Long passwords may
+  also be very expensive to hash for certain algorithms.
+  """
+  def registration_changeset(user, attrs, opts \\ []) do
+    user
+    |> cast(attrs, [:email, :password, :username])
+    |> validate_username()
+    |> validate_email(opts)
+    |> validate_password(opts)
+  end
+
+  defp validate_username(changeset) do
+    changeset
+    |> validate_required([:username])
+    |> validate_length(:username, min: 3, max: 20)
+    |> validate_format(:username, ~r/^[a-zA-Z0-9_]+$/,
+      message: "must contain only letters, numbers, and underscores"
+    )
+    |> unsafe_validate_unique(:username, Alblog.Repo)
+    |> unique_constraint(:username)
+  end
+
+  @doc """
+  A user changeset for changing the username.
+  """
+  def username_changeset(user, attrs, opts \\ []) do
+    user
+    |> cast(attrs, [:username])
+    |> validate_username()
+    |> maybe_validate_unique_username(opts)
+  end
+
+  defp maybe_validate_unique_username(changeset, opts) do
+    if Keyword.get(opts, :validate_unique, true) do
+      changeset
+    else
+      changeset
+    end
   end
 
   @doc """

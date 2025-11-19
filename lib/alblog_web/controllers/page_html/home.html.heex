@@ -1,6 +1,6 @@
 <Layouts.flash_group flash={@flash} />
-<div class="bg-base-100 text-base-content grid grid-cols-2 gap-8 mt-10 px-4">
-  <div class="max-w-xl px-4 ml-15 text-center mx-auto">
+<div class="bg-base-100 text-base-content max-w-3xl mx-auto mt-10 px-4">
+  <div class="text-center mb-12">
     <img
       src="https://github.com/albertobarrago.png"
       alt="Alberto Barrago Profile Picture"
@@ -17,16 +17,9 @@
     <p class="mt-4 leading-7 text-base-content/70">
       Hi, I'm Alberto. I write about my journey in the world of IT.
     </p>
-
-    <a
-      href="/articles"
-      class="mt-6 inline-block font-medium text-lg text-primary hover:text-primary-focus transition duration-150 ease-in-out"
-    >
-      Read the Latest Articles &rarr;
-    </a>
   </div>
 
-  <div class="max-w-2xl">
+  <div>
     <h2 class="text-2xl font-bold mb-6">Latest Articles</h2>
 
     <div class="space-y-6">
@@ -42,17 +35,23 @@
               <time datetime={article.published_at}>
                 {Calendar.strftime(article.published_at || DateTime.utc_now(), "%b %d, %Y")}
               </time>
-              <span>•</span>
-              <span class="badge badge-primary badge-sm">
-                {article.category || "Uncategorized"}
-              </span>
+              <%= if article.category && article.category != [] do %>
+                <span>•</span>
+                <div class="flex gap-1.5">
+                  <%= for tag <- article.category do %>
+                    <span class="badge badge-primary badge-sm">
+                      {tag}
+                    </span>
+                  <% end %>
+                </div>
+              <% end %>
             </div>
             <h3 class="text-xl font-semibold mb-2">
               <.link navigate={~p"/articles/#{article}"} class="hover:text-primary transition">
                 {article.title}
               </.link>
             </h3>
-            <div class="text-base-content/70 mb-3 line-clamp-3 prose prose-sm max-w-none">
+            <div class="text-base-content/70 mb-3 line-clamp-2 prose prose-sm max-w-none">
               {Earmark.as_html!(article.content || "") |> Phoenix.HTML.raw()}
             </div>
             <.link
