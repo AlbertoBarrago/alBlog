@@ -12,6 +12,7 @@ defmodule SimpleCrud.Application do
       SimpleCrud.Repo,
       {DNSCluster, query: Application.get_env(:simple_crud, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: SimpleCrud.PubSub},
+      SimpleCrudWeb.Presence,
       # Start a worker by calling: SimpleCrud.Worker.start_link(arg)
       # {SimpleCrud.Worker, arg},
       # Start to serve requests, typically the last entry

@@ -30,68 +30,33 @@
     <h2 class="text-2xl font-bold mb-6">Latest Articles</h2>
 
     <div class="space-y-6">
-      <article class="border-b border-base-300 pb-6">
-        <div class="flex items-center gap-2 text-sm text-base-content/60 mb-2">
-          <time datetime="2025-11-10">Nov 10, 2025</time>
-          <span>•</span>
-          <span>by Alberto Barrago</span>
-          <span>•</span>
-          <span class="badge badge-primary badge-sm">Elixir</span>
+      <%= if Enum.empty?(@articles) do %>
+        <div class="text-center py-12 bg-base-200 rounded-lg">
+          <p class="text-xl font-medium text-base-content/70">No articles yet.</p>
+          <p class="text-base-content/50 mt-2">Check back soon for fresh content!</p>
         </div>
-        <h3 class="text-xl font-semibold mb-2">
-          <a href="#" class="hover:text-primary transition">
-            Building Real-time Features with Phoenix LiveView
-          </a>
-        </h3>
-        <p class="text-base-content/70 mb-3">
-          Exploring how Phoenix LiveView revolutionizes real-time web development without writing JavaScript...
-        </p>
-        <a href="#" class="text-primary hover:text-primary-focus text-sm font-medium">
-          Read more →
-        </a>
-      </article>
-
-      <article class="border-b border-base-300 pb-6">
-        <div class="flex items-center gap-2 text-sm text-base-content/60 mb-2">
-          <time datetime="2025-11-05">Nov 5, 2025</time>
-          <span>•</span>
-          <span>by Alberto Barrago</span>
-          <span>•</span>
-          <span class="badge badge-secondary badge-sm">DevOps</span>
-        </div>
-        <h3 class="text-xl font-semibold mb-2">
-          <a href="#" class="hover:text-primary transition">
-            Kubernetes Best Practices for Production
-          </a>
-        </h3>
-        <p class="text-base-content/70 mb-3">
-          Lessons learned from deploying and managing applications in production Kubernetes clusters...
-        </p>
-        <a href="#" class="text-primary hover:text-primary-focus text-sm font-medium">
-          Read more →
-        </a>
-      </article>
-
-      <article class="border-b border-base-300 pb-6">
-        <div class="flex items-center gap-2 text-sm text-base-content/60 mb-2">
-          <time datetime="2025-10-28">Oct 28, 2025</time>
-          <span>•</span>
-          <span>by Alberto Barrago</span>
-          <span>•</span>
-          <span class="badge badge-accent badge-sm">Architecture</span>
-        </div>
-        <h3 class="text-xl font-semibold mb-2">
-          <a href="#" class="hover:text-primary transition">
-            Microservices vs Monoliths: When to Choose What
-          </a>
-        </h3>
-        <p class="text-base-content/70 mb-3">
-          A pragmatic look at architectural decisions based on real-world project constraints and team size...
-        </p>
-        <a href="#" class="text-primary hover:text-primary-focus text-sm font-medium">
-          Read more →
-        </a>
-      </article>
+      <% else %>
+        <%= for article <- @articles do %>
+          <article class="border-b border-base-300 pb-6 last:border-0">
+            <div class="flex items-center gap-2 text-sm text-base-content/60 mb-2">
+              <time datetime={article.published_at}><%= Calendar.strftime(article.published_at || DateTime.utc_now(), "%b %d, %Y") %></time>
+              <span>•</span>
+              <span class="badge badge-primary badge-sm"><%= article.category || "Uncategorized" %></span>
+            </div>
+            <h3 class="text-xl font-semibold mb-2">
+              <.link navigate={~p"/articles/#{article}"} class="hover:text-primary transition">
+                <%= article.title %>
+              </.link>
+            </h3>
+            <p class="text-base-content/70 mb-3 line-clamp-3">
+              <%= article.content %>
+            </p>
+            <.link navigate={~p"/articles/#{article}"} class="text-primary hover:text-primary-focus text-sm font-medium">
+              Read more →
+            </.link>
+          </article>
+        <% end %>
+      <% end %>
     </div>
 
     <div class="mt-8">

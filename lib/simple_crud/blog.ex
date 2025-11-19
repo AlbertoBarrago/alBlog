@@ -45,6 +45,13 @@ defmodule SimpleCrud.Blog do
   end
 
   @doc """
+  Returns the list of all articles.
+  """
+  def list_all_articles do
+    Repo.all(Article)
+  end
+
+  @doc """
   Gets a single article.
 
   Raises `Ecto.NoResultsError` if the Article does not exist.
@@ -60,6 +67,13 @@ defmodule SimpleCrud.Blog do
   """
   def get_article!(%Scope{} = scope, id) do
     Repo.get_by!(Article, id: id, user_id: scope.user.id)
+  end
+
+  @doc """
+  Gets a single article by ID.
+  """
+  def get_article!(id) do
+    Repo.get!(Article, id)
   end
 
   @doc """

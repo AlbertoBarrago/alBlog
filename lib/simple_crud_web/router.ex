@@ -21,7 +21,6 @@ defmodule SimpleCrudWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
-    resources "/products", ProductController
   end
 
   # Other scopes may use custom stacks.
@@ -56,9 +55,8 @@ defmodule SimpleCrudWeb.Router do
       live "/users/settings", UserLive.Settings, :edit
       live "/users/settings/confirm-email/:token", UserLive.Settings, :confirm_email
       live "/articles", ArticleLive.Index, :index
-      #live "/articles/new", ArticleLive.New, :new
-      #live "/articles/:id", ArticleLive.Show, :show
-      #live "/articles/:id/edit", ArticleLive.Edit, :edit
+      live "/articles/new", ArticleLive.Form, :new
+      live "/articles/:id/edit", ArticleLive.Form, :edit
     end
 
     post "/users/update-password", UserSessionController, :update_password
@@ -76,6 +74,11 @@ defmodule SimpleCrudWeb.Router do
 
     post "/users/log-in", UserSessionController, :create
     delete "/users/log-out", UserSessionController, :delete
+  end
 
+  scope "/", SimpleCrudWeb do
+    pipe_through :browser
+
+    live "/articles/:id", ArticleLive.ShowPublic, :show
   end
 end

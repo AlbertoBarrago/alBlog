@@ -2,7 +2,7 @@ defmodule SimpleCrudWeb.ArticleLive.Index do
   use SimpleCrudWeb, :live_view
 
   alias SimpleCrud.Blog
-  alias SimpleCrud.Accounts.Scope
+
 
   @impl true
   def render(assigns) do

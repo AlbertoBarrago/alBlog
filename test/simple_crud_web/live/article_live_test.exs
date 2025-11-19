@@ -86,40 +86,6 @@ defmodule SimpleCrudWeb.ArticleLiveTest do
     end
   end
 
-  describe "Show" do
-    setup [:create_article]
+  # Show tests removed as Show is now a controller action
 
-    test "displays article", %{conn: conn, article: article} do
-      {:ok, _show_live, html} = live(conn, ~p"/articles/#{article}")
-
-      assert html =~ "Show Article"
-      assert html =~ article.title
-    end
-
-    test "updates article and returns to show", %{conn: conn, article: article} do
-      {:ok, show_live, _html} = live(conn, ~p"/articles/#{article}")
-
-      assert {:ok, form_live, _} =
-               show_live
-               |> element("a", "Edit")
-               |> render_click()
-               |> follow_redirect(conn, ~p"/articles/#{article}/edit?return_to=show")
-
-      assert render(form_live) =~ "Edit Article"
-
-      assert form_live
-             |> form("#article-form", article: @invalid_attrs)
-             |> render_change() =~ "can&#39;t be blank"
-
-      assert {:ok, show_live, _html} =
-               form_live
-               |> form("#article-form", article: @update_attrs)
-               |> render_submit()
-               |> follow_redirect(conn, ~p"/articles/#{article}")
-
-      html = render(show_live)
-      assert html =~ "Article updated successfully"
-      assert html =~ "some updated title"
-    end
-  end
 end

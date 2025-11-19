@@ -21,5 +21,6 @@ defmodule SimpleCrud.Blog.Article do
     |> validate_required([:title, :slug, :content, :published_at, :category])
     |> unique_constraint(:slug)
     |> put_change(:user_id, user_scope.user.id)
+    |> put_change(:author_id, user_scope.user.id)
   end
 end
