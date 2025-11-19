@@ -18,4 +18,4 @@ Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
 
 ## Bonus 
-[🚀 Neovim + COQ + Mason + LSP: Mini Guide](https://hexdocs.pm/phoenix/overview.html)
+[🚀 Neovim + COQ + Mason + LSP: Mini Guide](https://dev.to/albz/neovim-coq-mason-lsp-mini-guide-246h)
