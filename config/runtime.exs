@@ -121,7 +121,7 @@ if config_env() == :prod do
         CAStore.file_path()
         |> File.read!()
         |> :public_key.pem_decode()
-        |> Enum.map(fn {_, _, der} -> der end)
+        |> Enum.map(fn {_, der, _} -> der end)
     ],
     port: 465
 
