@@ -20,7 +20,10 @@ defmodule AlblogWeb.ArticleLive.Show do
         </:actions>
       </.header>
 
-      <.list>
+      <<<<<<<
+        HEAD
+        <.list
+      >
         <:item title="Title">{@article.title}</:item>
         <:item title="Slug">{@article.slug}</:item>
         <:item title="Content">
@@ -38,7 +41,46 @@ defmodule AlblogWeb.ArticleLive.Show do
             <% end %>
           </div>
         </:item>
-      </.list>
+      </<<<<<<>
+      ||||||| 2650b79
+      =======
+      <div class="mt-6 border-t border-gray-100">
+        <dl class="divide-y divide-gray-100">
+          <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+            <dt class="text-sm font-medium leading-6 text-gray-900">Title</dt>
+            <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+              {@article.title}
+            </dd>
+          </div>
+          <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+            <dt class="text-sm font-medium leading-6 text-gray-900">Slug</dt>
+            <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+              {@article.slug}
+            </dd>
+          </div>
+          <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+            <dt class="text-sm font-medium leading-6 text-gray-900">Content</dt>
+            <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+              <div class="whitespace-pre-wrap border rounded-md p-4 bg-gray-50">
+                {@article.content}
+              </div>
+            </dd>
+          </div>
+          <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+            <dt class="text-sm font-medium leading-6 text-gray-900">Published at</dt>
+            <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+              {@article.published_at}
+            </dd>
+          </div>
+          <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+            <dt class="text-sm font-medium leading-6 text-gray-900">Category</dt>
+            <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+              {@article.category}
+            </dd>
+          </div>
+        </dl>
+      </div>
+      >>>>>>> main
     </Layouts.app>
     """
   end
