@@ -73,9 +73,16 @@ jobs:
           GIGALIXIR_API_KEY: ${{ secrets.GIGALIXIR_API_KEY }}
           GIGALIXIR_EMAIL: ${{ secrets.GIGALIXIR_EMAIL }}
         run: |
+          if [ -z "$GIGALIXIR_EMAIL" ] || [ -z "$GIGALIXIR_API_KEY" ]; then
+            echo "Error: GIGALIXIR_EMAIL or GIGALIXIR_API_KEY secrets are missing."
+            exit 1
+          fi
+
+          # Create .netrc for authentication
+          echo "machine git.gigalixir.com login $GIGALIXIR_EMAIL password $GIGALIXIR_API_KEY" > ~/.netrc
+          chmod 600 ~/.netrc
+
           gigalixir git:remote alblog
-          # Embed credentials in the remote URL for authentication
-          git remote set-url gigalixir https://${{ secrets.GIGALIXIR_EMAIL }}:${{ secrets.GIGALIXIR_API_KEY }}@git.gigalixir.com/alblog.git
           git push -f gigalixir HEAD:refs/heads/main
 
       - name: Run Migrations
