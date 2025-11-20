@@ -74,6 +74,8 @@ jobs:
           GIGALIXIR_EMAIL: ${{ secrets.GIGALIXIR_EMAIL }}
         run: |
           gigalixir git:remote alblog
+          # Embed credentials in the remote URL for authentication
+          git remote set-url gigalixir https://${{ secrets.GIGALIXIR_EMAIL }}:${{ secrets.GIGALIXIR_API_KEY }}@git.gigalixir.com/alblog.git
           git push -f gigalixir HEAD:refs/heads/main
 
       - name: Run Migrations
