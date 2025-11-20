@@ -69,8 +69,10 @@ jobs:
         run: pip install gigalixir
 
       - name: Deploy to Gigalixir
+        env:
+          GIGALIXIR_API_KEY: ${{ secrets.GIGALIXIR_API_KEY }}
+          GIGALIXIR_EMAIL: ${{ secrets.GIGALIXIR_EMAIL }}
         run: |
-          gigalixir login -e "${{ secrets.GIGALIXIR_EMAIL }}" -y -p "${{ secrets.GIGALIXIR_API_KEY }}"
           gigalixir git:remote alblog
           git push -f gigalixir HEAD:refs/heads/main
 
