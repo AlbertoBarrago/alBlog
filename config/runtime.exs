@@ -114,7 +114,8 @@ if config_env() == :prod do
     relay: "smtp.gmail.com",
     username: System.get_env("GMAIL_USERNAME"),
     password: System.get_env("GMAIL_APP_PASSWORD"),
-    ssl: true,
+    ssl: false,
+    tls: :always,
     tls_options: [
       verify: :verify_peer,
       cacerts:
@@ -123,7 +124,7 @@ if config_env() == :prod do
         |> :public_key.pem_decode()
         |> Enum.map(fn {_, der, _} -> der end)
     ],
-    port: 465
+    port: 587
 
   #
   # Most non-SMTP adapters require an API client. Swoosh supports Req, Hackney,
