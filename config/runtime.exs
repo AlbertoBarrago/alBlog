@@ -119,6 +119,9 @@ if config_env() == :prod do
     tls_options: [
       verify: :verify_peer,
       depth: 99,
+      customize_hostname_check: [
+        match_fun: :public_key.pkix_verify_hostname_match_fun(:https)
+      ],
       cacerts:
         CAStore.file_path()
         |> File.read!()
