@@ -115,6 +115,14 @@ if config_env() == :prod do
     username: System.get_env("GMAIL_USERNAME"),
     password: System.get_env("GMAIL_APP_PASSWORD"),
     ssl: true,
+    tls_options: [
+      verify: :verify_peer,
+      cacerts:
+        CAStore.file_path()
+        |> File.read!()
+        |> :public_key.pem_decode()
+        |> Enum.map(fn {_, _, der} -> der end)
+    ],
     port: 465
 
   #
