@@ -119,6 +119,7 @@ if config_env() == :prod do
     tls_options: [
       verify: :verify_peer,
       depth: 99,
+      server_name_indication: ~c"smtp.gmail.com",
       customize_hostname_check: [
         match_fun: :public_key.pkix_verify_hostname_match_fun(:https)
       ],
