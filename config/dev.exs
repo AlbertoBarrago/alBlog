@@ -1,5 +1,4 @@
 import Config
-
 # Configure your database
 config :alblog, Alblog.Repo,
   username: "postgres",

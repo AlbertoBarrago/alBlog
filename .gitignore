@@ -38,3 +38,6 @@ npm-debug.log
 # IDE
 .idea
 .DS_Store
+
+# Environment variables
+.env

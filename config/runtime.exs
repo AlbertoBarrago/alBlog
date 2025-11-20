@@ -108,6 +108,15 @@ if config_env() == :prod do
   #       adapter: Swoosh.Adapters.Mailgun,
   #       api_key: System.get_env("MAILGUN_API_KEY"),
   #       domain: System.get_env("MAILGUN_DOMAIN")
+
+  config :alblog, Alblog.Mailer,
+    adapter: Swoosh.Adapters.SMTP,
+    relay: "smtp.gmail.com",
+    username: System.get_env("GMAIL_USERNAME"),
+    password: System.get_env("GMAIL_APP_PASSWORD"),
+    ssl: true,
+    port: 465
+
   #
   # Most non-SMTP adapters require an API client. Swoosh supports Req, Hackney,
   # and Finch out-of-the-box. This configuration is typically done at
