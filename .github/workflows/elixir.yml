@@ -78,8 +78,9 @@ jobs:
             exit 1
           fi
 
-          # Create .netrc for authentication
+          # Create .netrc for authentication (git and api)
           echo "machine git.gigalixir.com login $GIGALIXIR_EMAIL password $GIGALIXIR_API_KEY" > ~/.netrc
+          echo "machine api.gigalixir.com login $GIGALIXIR_EMAIL password $GIGALIXIR_API_KEY" >> ~/.netrc
           chmod 600 ~/.netrc
 
           gigalixir git:remote alblog
