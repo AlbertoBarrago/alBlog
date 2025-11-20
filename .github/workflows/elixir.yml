@@ -57,21 +57,22 @@ jobs:
     name: Deploy to Gigalixir
     runs-on: ubuntu-22.04
     needs: build
-    # Only deploy on pushes to main branch (not on PRs)
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          # Fetch full history for Gigalixir deployment
           fetch-depth: 0
-      
+
+      - name: Install Gigalixir CLI
+        run: pip install gigalixir
+
       - name: Deploy to Gigalixir
-        uses: mhanberg/gigalixir-action@v0.6.2
-        with:
-          GIGALIXIR_APP: alblog
-          GIGALIXIR_CLEAN: true
-          GIGALIXIR_USERNAME: ${{ secrets.GIGALIXIR_EMAIL }}
-          GIGALIXIR_PASSWORD: ${{ secrets.GIGALIXIR_API_KEY }}
-          MIGRATIONS: false
+        run: |
+          gigalixir login -e "${{ secrets.GIGALIXIR_EMAIL }}" -y -p "${{ secrets.GIGALIXIR_API_KEY }}"
+          gigalixir git:remote alblog
+          git push -f gigalixir HEAD:refs/heads/main
+
+      - name: Run Migrations
+        run: gigalixir ps:migrate -a alblog
