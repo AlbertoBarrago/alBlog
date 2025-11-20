@@ -295,6 +295,67 @@ defmodule Alblog.Accounts do
     UserNotifier.deliver_login_instructions(user, magic_link_url_fun.(encoded_token))
   end
 
+  @doc ~S"""
+  Delivers the reset password email to the given user.
+
+  ## Examples
+
+      iex> deliver_user_reset_password_instructions(user, &url(~p"/users/reset-password/#{&1}"))
+      {:ok, %{to: ..., body: ...}}
+
+  """
+  def deliver_user_reset_password_instructions(%User{} = user, reset_password_url_fun)
+      when is_function(reset_password_url_fun, 1) do
+    {encoded_token, user_token} = UserToken.build_email_token(user, "reset_password")
+    Repo.insert!(user_token)
+    UserNotifier.deliver_reset_password_instructions(user, reset_password_url_fun.(encoded_token))
+  end
+
+  @doc """
+  Gets the user by reset password token.
+
+  ## Examples
+
+      iex> get_user_by_reset_password_token("validtoken")
+      %User{}
+
+      iex> get_user_by_reset_password_token("invalidtoken")
+      nil
+
+  """
+  def get_user_by_reset_password_token(token) do
+    with {:ok, query} <- UserToken.verify_reset_password_token_query(token),
+         %User{} = user <- Repo.one(query) do
+      user
+    else
+      _ -> nil
+    end
+  end
+
+  @doc """
+  Resets the user password.
+
+  ## Examples
+
+      iex> reset_user_password(user, %{password: "new long password"})
+      {:ok, %User{}}
+
+      iex> reset_user_password(user, %{password: "short"})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def reset_user_password(user, attrs) do
+    Repo.transact(fn ->
+      with {:ok, {user, _tokens}} <- update_user_password(user, attrs),
+           {_count, _result} <-
+             Repo.delete_all(
+               from(UserToken, where: [user_id: ^user.id, context: "reset_password"])
+             ) do
+        {:ok, user}
+      end
+    end)
+  end
+
   @doc """
   Deletes the signed token with the given context.
   """

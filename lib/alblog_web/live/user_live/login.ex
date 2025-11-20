@@ -80,6 +80,14 @@ defmodule AlblogWeb.UserLive.Login do
             label="Password"
             autocomplete="current-password"
           />
+          <div class="text-right text-sm">
+            <.link
+              navigate={~p"/users/reset-password"}
+              class="font-semibold text-brand hover:underline"
+            >
+              Forgot password?
+            </.link>
+          </div>
           <.button class="btn btn-primary w-full" name={@form[:remember_me].name} value="true">
             Log in and stay logged in <span aria-hidden="true">→</span>
           </.button>

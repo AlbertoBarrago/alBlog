@@ -81,4 +81,24 @@ defmodule Alblog.Accounts.UserNotifier do
     ==============================
     """)
   end
+
+  @doc """
+  Deliver instructions to reset a user password.
+  """
+  def deliver_reset_password_instructions(user, url) do
+    deliver(user.email, "Reset password instructions", """
+
+    ==============================
+
+    Hi #{user.email},
+
+    You can reset your password by visiting the URL below:
+
+    #{url}
+
+    If you didn't request this change, please ignore this.
+
+    ==============================
+    """)
+  end
 end
