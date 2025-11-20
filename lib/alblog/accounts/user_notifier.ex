@@ -9,7 +9,7 @@ defmodule Alblog.Accounts.UserNotifier do
     email =
       new()
       |> to(recipient)
-      |> from({"Alblog", "contact@example.com"})
+      |> from({"Alblog", System.get_env("GMAIL_USERNAME") || "contact@example.com"})
       |> subject(subject)
       |> text_body(body)
 
