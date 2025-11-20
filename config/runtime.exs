@@ -118,6 +118,7 @@ if config_env() == :prod do
     tls: :always,
     tls_options: [
       verify: :verify_peer,
+      depth: 99,
       cacerts:
         CAStore.file_path()
         |> File.read!()
