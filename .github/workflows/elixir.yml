@@ -87,4 +87,7 @@ jobs:
           git push -f gigalixir HEAD:refs/heads/main
 
       - name: Run Migrations
-        run: gigalixir ps:migrate -a alblog
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -t rsa -p 22 ssh.gigalixir.com >> ~/.ssh/known_hosts
+          gigalixir ps:migrate -a alblog
