@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="csrf-token" content={get_csrf_token()} />
-    <.live_title default="alBlog" suffix=" · Alberto Engineer">
+    <.live_title default="alBlog" suffix=" · alBz Blog">
       {assigns[:page_title]}
     </.live_title>
     <link phx-track-static rel="stylesheet" href={~p"/assets/css/app.css"} />
@@ -16,6 +16,16 @@
       rel="stylesheet"
     />
     <script defer phx-track-static type="text/javascript" src={~p"/assets/js/app.js"}>
+    </script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RQYBRMRYKE">
+    </script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-RQYBRMRYKE');
     </script>
   </head>
 
@@ -63,6 +73,14 @@
             </.link>
           </li>
         <% else %>
+          <li>
+            <.link
+              href={~p"/articles"}
+              class="text-base-content hover:text-primary transition flex items-center gap-1.5"
+            >
+              <.icon name="hero-newspaper" class="w-5 h-5" /> Articles
+            </.link>
+          </li>
           <li>
             <.link
               href={~p"/users/register"}
@@ -148,6 +166,14 @@
               </.link>
             </li>
           <% else %>
+            <li>
+              <.link
+                href={~p"/articles"}
+                class="block px-3 py-2 text-base-content hover:bg-base-300 hover:text-primary rounded transition flex items-center gap-2"
+              >
+                <.icon name="hero-newspaper" class="w-5 h-5" /> Articles
+              </.link>
+            </li>
             <li>
               <.link
                 href={~p"/users/register"}

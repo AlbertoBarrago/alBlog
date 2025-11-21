@@ -11,7 +11,7 @@ defmodule AlblogWeb.ArticleLive.Index do
       <.header>
         <div class="flex justify-between items-center mb-8">
           <h1 class="text-3xl font-bold text-primary">Articles</h1>
-          <%= if @current_scope.user && Accounts.User.is_admin?(@current_scope.user) do %>
+          <%= if @current_scope && @current_scope.user && Accounts.User.is_admin?(@current_scope.user) do %>
             <.link href={~p"/articles/new"}>
               <.button variant="primary">New Article</.button>
             </.link>
@@ -91,7 +91,7 @@ defmodule AlblogWeb.ArticleLive.Index do
               >
                 Read full article <span aria-hidden="true" class="ml-1">&rarr;</span>
               </.link>
-              <%= if @current_scope.user && Alblog.Accounts.User.is_admin?(@current_scope.user) do %>
+              <%= if @current_scope && @current_scope.user && Alblog.Accounts.User.is_admin?(@current_scope.user) do %>
                 <div class="flex space-x-4">
                   <.link
                     navigate={~p"/articles/#{article}/edit"}
@@ -120,7 +120,7 @@ defmodule AlblogWeb.ArticleLive.Index do
   def mount(_params, _session, socket) do
     current_scope = socket.assigns.current_scope
 
-    if connected?(socket) do
+    if connected?(socket) && current_scope do
       Blog.subscribe_articles(current_scope)
     end
 
@@ -144,6 +144,10 @@ defmodule AlblogWeb.ArticleLive.Index do
       when type in [:created, :updated, :deleted] do
     {:noreply,
      stream(socket, :articles, list_articles(socket.assigns.current_scope), reset: true)}
+  end
+
+  defp list_articles(nil) do
+    Blog.list_all_articles()
   end
 
   defp list_articles(current_scope) do

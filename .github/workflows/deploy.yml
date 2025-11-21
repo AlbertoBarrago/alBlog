@@ -1,0 +1,42 @@
+name: Deploy to Gigalixir
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - '*'
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Deploy to Gigalixir
+    runs-on: ubuntu-22.04
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install Gigalixir CLI
+        run: pip install gigalixir
+
+      - name: Deploy to Gigalixir
+        env:
+          GIGALIXIR_API_KEY: ${{ secrets.GIGALIXIR_API_KEY }}
+          GIGALIXIR_EMAIL: ${{ secrets.GIGALIXIR_EMAIL }}
+        run: |
+          if [ -z "$GIGALIXIR_EMAIL" ] || [ -z "$GIGALIXIR_API_KEY" ]; then
+            echo "Error: GIGALIXIR_EMAIL or GIGALIXIR_API_KEY secrets are missing."
+            exit 1
+          fi
+
+          # Create .netrc for authentication (git and api)
+          echo "machine git.gigalixir.com login $GIGALIXIR_EMAIL password $GIGALIXIR_API_KEY" > ~/.netrc
+          echo "machine api.gigalixir.com login $GIGALIXIR_EMAIL password $GIGALIXIR_API_KEY" >> ~/.netrc
+          chmod 600 ~/.netrc
+
+          gigalixir git:remote alblog
+          git push -f gigalixir HEAD:refs/heads/main
