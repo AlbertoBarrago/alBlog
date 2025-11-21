@@ -3,10 +3,16 @@ defmodule AlblogWeb.ArticleLiveTest do
 
   import Phoenix.LiveViewTest
   import Alblog.BlogFixtures
+  import Alblog.AccountsFixtures
 
   @invalid_attrs %{title: nil, content: nil}
 
-  setup :register_and_log_in_user
+  setup %{conn: conn} do
+    user = admin_fixture()
+    scope = Alblog.Accounts.Scope.for_user(user)
+    conn = log_in_user(conn, user)
+    %{conn: conn, user: user, scope: scope}
+  end
 
   defp create_article(%{scope: scope}) do
     article = article_fixture(scope)
@@ -27,11 +33,11 @@ defmodule AlblogWeb.ArticleLiveTest do
     test "saves new article", %{conn: conn} do
       {:ok, index_live, _html} = live(conn, ~p"/articles")
 
-      assert {:ok, form_live, _} =
-               index_live
-               |> element("a", "New Article")
-               |> render_click()
-               |> follow_redirect(conn, ~p"/articles/new")
+      assert index_live
+             |> element("a", "New Article")
+             |> render_click()
+
+      {:ok, form_live, _} = live(conn, ~p"/articles/new")
 
       assert render(form_live) =~ "New Article"
 

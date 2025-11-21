@@ -5,6 +5,7 @@ defmodule Alblog.Accounts.User do
   schema "users" do
     field :email, :string
     field :username, :string
+    field :role, :string, default: "user"
     field :password, :string, virtual: true, redact: true
     field :hashed_password, :string, redact: true
     field :confirmed_at, :utc_datetime
@@ -12,6 +13,9 @@ defmodule Alblog.Accounts.User do
 
     timestamps(type: :utc_datetime)
   end
+
+  def is_admin?(%__MODULE__{role: "admin"}), do: true
+  def is_admin?(_), do: false
 
   @doc """
   A user changeset for registration.

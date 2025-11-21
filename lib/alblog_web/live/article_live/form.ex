@@ -118,12 +118,21 @@ defmodule AlblogWeb.ArticleLive.Form do
 
   @impl true
   def mount(params, _session, socket) do
-    {:ok,
-     socket
-     |> assign(:return_to, return_to(params["return_to"]))
-     |> assign(:current_tag, "")
-     |> assign(:preview_mode, false)
-     |> apply_action(socket.assigns.live_action, params)}
+    current_scope = socket.assigns.current_scope
+
+    if Alblog.Accounts.User.is_admin?(current_scope.user) do
+      {:ok,
+       socket
+       |> assign(:return_to, return_to(params["return_to"]))
+       |> assign(:current_tag, "")
+       |> assign(:preview_mode, false)
+       |> apply_action(socket.assigns.live_action, params)}
+    else
+      {:ok,
+       socket
+       |> put_flash(:error, "You are not authorized to access this page.")
+       |> redirect(to: ~p"/")}
+    end
   end
 
   defp return_to("show"), do: "show"

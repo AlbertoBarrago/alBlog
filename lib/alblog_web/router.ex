@@ -54,7 +54,6 @@ defmodule AlblogWeb.Router do
       on_mount: [{AlblogWeb.UserAuth, :require_authenticated}] do
       live "/users/settings", UserLive.Settings, :edit
       live "/users/settings/confirm-email/:token", UserLive.Settings, :confirm_email
-      live "/articles", ArticleLive.Index, :index
       live "/articles/new", ArticleLive.Form, :new
       live "/articles/:id/edit", ArticleLive.Form, :edit
     end
@@ -72,6 +71,7 @@ defmodule AlblogWeb.Router do
       live "/users/log-in/:token", UserLive.Confirmation, :new
       live "/users/reset-password", UserLive.ForgotPassword, :new
       live "/users/reset-password/:token", UserLive.ResetPassword, :edit
+      live "/articles", ArticleLive.Index, :index
     end
 
     post "/users/log-in", UserSessionController, :create

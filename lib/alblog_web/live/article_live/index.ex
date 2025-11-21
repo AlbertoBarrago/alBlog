@@ -2,18 +2,21 @@ defmodule AlblogWeb.ArticleLive.Index do
   use AlblogWeb, :live_view
 
   alias Alblog.Blog
+  alias Alblog.Accounts
 
   @impl true
   def render(assigns) do
     ~H"""
     <Layouts.app flash={@flash} current_scope={@current_scope}>
       <.header>
-        Listing Articles
-        <:actions>
-          <.button variant="primary" navigate={~p"/articles/new"}>
-            <.icon name="hero-plus" /> New Article
-          </.button>
-        </:actions>
+        <div class="flex justify-between items-center mb-8">
+          <h1 class="text-3xl font-bold text-primary">Articles</h1>
+          <%= if @current_scope.user && Accounts.User.is_admin?(@current_scope.user) do %>
+            <.link href={~p"/articles/new"}>
+              <.button variant="primary">New Article</.button>
+            </.link>
+          <% end %>
+        </div>
       </.header>
 
       <%= if Enum.empty?(@streams.articles.inserts) do %>
@@ -88,21 +91,23 @@ defmodule AlblogWeb.ArticleLive.Index do
               >
                 Read full article <span aria-hidden="true" class="ml-1">&rarr;</span>
               </.link>
-              <div class="flex space-x-4">
-                <.link
-                  navigate={~p"/articles/#{article}/edit"}
-                  class="text-sm font-medium text-base-content/60 hover:text-base-content transition"
-                >
-                  Edit
-                </.link>
-                <.link
-                  phx-click={JS.push("delete", value: %{id: article.id}) |> hide("##{id}")}
-                  data-confirm="Are you sure?"
-                  class="text-sm font-medium text-error hover:text-error-content transition"
-                >
-                  Delete
-                </.link>
-              </div>
+              <%= if @current_scope.user && Alblog.Accounts.User.is_admin?(@current_scope.user) do %>
+                <div class="flex space-x-4">
+                  <.link
+                    navigate={~p"/articles/#{article}/edit"}
+                    class="text-sm font-medium text-base-content/60 hover:text-base-content transition"
+                  >
+                    Edit
+                  </.link>
+                  <.link
+                    phx-click={JS.push("delete", value: %{id: article.id}) |> hide("##{id}")}
+                    data-confirm="Are you sure?"
+                    class="text-sm font-medium text-error hover:text-error-content transition"
+                  >
+                    Delete
+                  </.link>
+                </div>
+              <% end %>
             </div>
           </div>
         </div>

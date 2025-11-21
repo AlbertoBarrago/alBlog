@@ -41,3 +41,6 @@ npm-debug.log
 
 # Environment variables
 .env
+
+# Documentation
+DB_CHEATSHEET.md
