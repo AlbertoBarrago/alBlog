@@ -96,30 +96,30 @@ defmodule AlblogWeb.Layouts do
   def theme_toggle(assigns) do
     ~H"""
     <div class="card relative flex flex-row items-center border-2 border-base-300 bg-base-300 rounded-full">
-      <div class="absolute w-1/3 h-full rounded-full border-1 border-base-200 bg-base-100 brightness-200 left-0 [[data-theme-selection=light]_&]:left-1/3 [[data-theme-selection=dark]_&]:left-2/3 transition-[left]" />
+      <div class="absolute w-1/2 h-full rounded-full border-1 border-base-200 bg-base-100 brightness-200 left-0 [[data-theme-selection=dark]_&]:left-1/2 transition-[left] duration-300" />
 
       <button
-        class="flex p-2 cursor-pointer w-1/3"
-        phx-click={JS.dispatch("phx:set-theme")}
-        data-phx-theme="system"
-      >
-        <.icon name="hero-computer-desktop-micro" class="size-4 opacity-75 hover:opacity-100" />
-      </button>
-
-      <button
-        class="flex p-2 cursor-pointer w-1/3"
+        class="flex p-2 cursor-pointer w-1/2 z-10"
         phx-click={JS.dispatch("phx:set-theme")}
         data-phx-theme="light"
+        title="Light mode"
       >
-        <.icon name="hero-sun-micro" class="size-4 opacity-75 hover:opacity-100" />
+        <.icon
+          name="hero-sun-micro"
+          class="size-4 opacity-75 hover:opacity-100 transition [[data-theme-selection=light]_&]:text-orange-400 [[data-theme-selection=light]_&]:opacity-100"
+        />
       </button>
 
       <button
-        class="flex p-2 cursor-pointer w-1/3"
+        class="flex p-2 cursor-pointer w-1/2 z-10"
         phx-click={JS.dispatch("phx:set-theme")}
         data-phx-theme="dark"
+        title="Dark mode"
       >
-        <.icon name="hero-moon-micro" class="size-4 opacity-75 hover:opacity-100" />
+        <.icon
+          name="hero-moon-micro"
+          class="size-4 opacity-75 hover:opacity-100 transition [[data-theme-selection=dark]_&]:text-yellow-300 [[data-theme-selection=dark]_&]:opacity-100"
+        />
       </button>
     </div>
     """

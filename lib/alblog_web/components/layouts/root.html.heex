@@ -21,23 +21,27 @@
 
   <body class="bg-base-100 min-h-screen flex flex-col">
     <nav class="w-full relative z-10 flex justify-between items-center px-4 sm:px-6 lg:px-8 shadow-md bg-base-200">
-      <.link href={~p"/"} class="flex items-center py-3">
-        <span class="text-2xl font-bold text-primary hover:text-primary-focus transition">
-          alBlog
-        </span>
-      </.link>
-
-      <ul class="flex items-center gap-4 py-3">
+      <div class="flex items-center gap-3">
+        <.link href={~p"/"} class="flex items-center py-3 group">
+          <span class="text-2xl font-bold bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent hover:scale-110 transition-transform duration-300 ease-out">
+            alBlog
+          </span>
+        </.link>
         <%= if @current_scope do %>
-          <li class="text-sm font-semibold text-primary">
+          <span class="hidden md:inline-block text-sm font-semibold text-primary/80 border-l-2 border-primary/30 pl-3 ml-1">
             @{@current_scope.user.username || @current_scope.user.email}
-          </li>
+          </span>
+        <% end %>
+      </div>
+
+      <ul class="hidden md:flex items-center gap-4 py-3">
+        <%= if @current_scope do %>
           <li>
             <.link
               href={~p"/articles"}
-              class="text-base-content hover:text-primary transition"
+              class="text-base-content hover:text-primary transition flex items-center gap-1.5"
             >
-              Articles
+              <.icon name="hero-newspaper" class="w-5 h-5" /> Articles
             </.link>
           </li>
 
@@ -80,7 +84,126 @@
           <.theme_toggle />
         </li>
       </ul>
+
+      <button
+        id="mobile-menu-button"
+        class="md:hidden p-2 text-base-content hover:text-primary transition"
+        aria-label="Toggle menu"
+      >
+        <.icon name="hero-bars-3" class="w-6 h-6" />
+      </button>
     </nav>
+
+    <div
+      id="mobile-menu-overlay"
+      class="fixed inset-0 bg-black/50 z-40 hidden"
+      aria-hidden="true"
+    >
+    </div>
+
+    <div
+      id="mobile-menu"
+      class="fixed top-0 right-0 h-full w-64 bg-base-200 shadow-xl z-50 transform translate-x-full transition-transform duration-300 ease-in-out"
+    >
+      <div class="flex flex-col h-full">
+        <div class="flex justify-between items-center p-4 border-b border-base-300">
+          <span class="text-xl font-bold text-primary">Menu</span>
+          <button
+            id="mobile-menu-close"
+            class="p-2 text-base-content hover:text-error transition"
+            aria-label="Close menu"
+          >
+            <.icon name="hero-x-mark" class="w-6 h-6" />
+          </button>
+        </div>
+
+        <ul class="flex flex-col gap-2 p-4 flex-grow">
+          <%= if @current_scope do %>
+            <li class="px-3 py-2 text-sm font-semibold text-primary border-b border-base-300 mb-2">
+              @{@current_scope.user.username || @current_scope.user.email}
+            </li>
+            <li>
+              <.link
+                href={~p"/articles"}
+                class="block px-3 py-2 text-base-content hover:bg-base-300 hover:text-primary rounded transition"
+              >
+                <.icon name="hero-newspaper" class="w-5 h-5" /> Articles
+              </.link>
+            </li>
+            <li>
+              <.link
+                href={~p"/users/settings"}
+                class="block px-3 py-2 text-base-content hover:bg-base-300 hover:text-primary rounded transition flex items-center gap-2"
+              >
+                <.icon name="hero-cog-6-tooth" class="w-5 h-5" /> Settings
+              </.link>
+            </li>
+            <li>
+              <.link
+                href={~p"/users/log-out"}
+                method="delete"
+                class="block px-3 py-2 text-base-content hover:bg-base-300 hover:text-error rounded transition flex items-center gap-2"
+              >
+                <.icon name="hero-arrow-right-on-rectangle" class="w-5 h-5" /> Log out
+              </.link>
+            </li>
+          <% else %>
+            <li>
+              <.link
+                href={~p"/users/register"}
+                class="block px-3 py-2 text-base-content hover:bg-base-300 hover:text-primary rounded transition"
+              >
+                Register
+              </.link>
+            </li>
+            <li>
+              <.link
+                href={~p"/users/log-in"}
+                class="block px-3 py-2 bg-primary hover:bg-primary-focus text-primary-content rounded transition text-center font-semibold"
+              >
+                Log in
+              </.link>
+            </li>
+          <% end %>
+        </ul>
+
+        <div class="p-4 border-t border-base-300">
+          <div class="flex items-center justify-between">
+            <span class="text-sm text-base-content">Theme</span>
+            <.theme_toggle />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const menuButton = document.getElementById('mobile-menu-button');
+        const closeButton = document.getElementById('mobile-menu-close');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const overlay = document.getElementById('mobile-menu-overlay');
+
+        function openMenu() {
+          mobileMenu.classList.remove('translate-x-full');
+          overlay.classList.remove('hidden');
+          document.body.style.overflow = 'hidden';
+        }
+
+        function closeMenu() {
+          mobileMenu.classList.add('translate-x-full');
+          overlay.classList.add('hidden');
+          document.body.style.overflow = '';
+        }
+
+        menuButton?.addEventListener('click', openMenu);
+        closeButton?.addEventListener('click', closeMenu);
+        overlay?.addEventListener('click', closeMenu);
+
+        mobileMenu?.querySelectorAll('a').forEach(link => {
+          link.addEventListener('click', closeMenu);
+        });
+      });
+    </script>
     <div class="flex-grow">
       {@inner_content}
     </div>
