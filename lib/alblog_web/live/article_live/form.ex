@@ -38,7 +38,7 @@ defmodule AlblogWeb.ArticleLive.Form do
             </div>
             <%= if @preview_mode do %>
               <div class="prose prose-slate max-w-none p-4 border rounded-md bg-base-100 min-h-[16rem]">
-                {Earmark.as_html!(@form[:content].value || "") |> Phoenix.HTML.raw()}
+                {AlblogWeb.MarkdownHelper.to_html(@form[:content].value) |> Phoenix.HTML.raw()}
               </div>
               <input type="hidden" name={@form[:content].name} value={@form[:content].value} />
             <% else %>

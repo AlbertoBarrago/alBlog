@@ -24,8 +24,8 @@ defmodule AlblogWeb.ArticleLive.Show do
         <:item title="Title">{@article.title}</:item>
         <:item title="Slug">{@article.slug}</:item>
         <:item title="Content">
-          <div class="prose prose-slate max-w-none">
-            {Earmark.as_html!(@article.content || "") |> Phoenix.HTML.raw()}
+          <div class="prose prose-lg max-w-none text-base-content leading-relaxed">
+            {AlblogWeb.MarkdownHelper.to_html(@article.content) |> Phoenix.HTML.raw()}
           </div>
         </:item>
         <:item title="Published at">{@article.published_at}</:item>

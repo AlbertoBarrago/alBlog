@@ -81,7 +81,7 @@ defmodule AlblogWeb.ArticleLive.Index do
                 <span>By {article.user.username}</span>
               </div>
               <div class="text-base-content/80 leading-relaxed line-clamp-4 prose prose-sm max-w-none">
-                {Earmark.as_html!(article.content || "") |> Phoenix.HTML.raw()}
+                {AlblogWeb.MarkdownHelper.to_html(article.content) |> Phoenix.HTML.raw()}
               </div>
             </div>
             <div class="bg-base-200 px-6 py-4 flex justify-between items-center border-t border-base-300">
