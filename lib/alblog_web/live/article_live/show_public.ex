@@ -66,6 +66,10 @@ defmodule AlblogWeb.ArticleLive.ShowPublic do
             {Calendar.strftime(@article.published_at || DateTime.utc_now(), "%B %d, %Y")}
           </time>
           <span>•</span>
+          <span class="font-medium text-primary">
+            By {@article.user.username}
+          </span>
+          <span>•</span>
           <div class="flex gap-1.5">
             <%= for tag <- @article.category do %>
               <span class="badge badge-primary badge-sm">

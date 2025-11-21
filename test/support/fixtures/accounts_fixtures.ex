@@ -14,7 +14,8 @@ defmodule Alblog.AccountsFixtures do
 
   def valid_user_attributes(attrs \\ %{}) do
     Enum.into(attrs, %{
-      email: unique_user_email()
+      email: unique_user_email(),
+      username: "u#{System.unique_integer([:positive])}"
     })
   end
 

@@ -41,14 +41,19 @@ defmodule Alblog.Blog do
 
   """
   def list_articles(%Scope{} = scope) do
-    Repo.all_by(Article, user_id: scope.user.id)
+    Article
+    |> where(user_id: ^scope.user.id)
+    |> Repo.all()
+    |> Repo.preload(:user)
   end
 
   @doc """
   Returns the list of all articles.
   """
   def list_all_articles do
-    Repo.all(Article)
+    Article
+    |> Repo.all()
+    |> Repo.preload(:user)
   end
 
   @doc """
@@ -66,14 +71,18 @@ defmodule Alblog.Blog do
 
   """
   def get_article!(%Scope{} = scope, id) do
-    Repo.get_by!(Article, id: id, user_id: scope.user.id)
+    Article
+    |> Repo.get_by!(id: id, user_id: scope.user.id)
+    |> Repo.preload(:user)
   end
 
   @doc """
   Gets a single article by ID.
   """
   def get_article!(id) do
-    Repo.get!(Article, id)
+    Article
+    |> Repo.get!(id)
+    |> Repo.preload(:user)
   end
 
   @doc """

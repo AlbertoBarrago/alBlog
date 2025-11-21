@@ -23,6 +23,6 @@ defmodule Alblog.BlogFixtures do
       })
 
     {:ok, article} = Alblog.Blog.create_article(scope, attrs)
-    article
+    Alblog.Repo.preload(article, :user)
   end
 end

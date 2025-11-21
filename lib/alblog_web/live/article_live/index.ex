@@ -74,6 +74,8 @@ defmodule AlblogWeb.ArticleLive.Index do
                   />
                 </svg>
                 {article.published_at}
+                <span class="mx-2">•</span>
+                <span>By {article.user.username}</span>
               </div>
               <div class="text-base-content/80 leading-relaxed line-clamp-4 prose prose-sm max-w-none">
                 {Earmark.as_html!(article.content || "") |> Phoenix.HTML.raw()}

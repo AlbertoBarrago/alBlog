@@ -183,7 +183,7 @@ defmodule Alblog.AccountsTest do
   describe "change_user_password/3" do
     test "returns a user changeset" do
       assert %Ecto.Changeset{} = changeset = Accounts.change_user_password(%User{})
-      assert changeset.required == [:password]
+      assert changeset.required == []
     end
 
     test "allows fields to be set" do

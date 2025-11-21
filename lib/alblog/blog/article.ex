@@ -9,7 +9,7 @@ defmodule Alblog.Blog.Article do
     field :published_at, :utc_datetime
     field :category, {:array, :string}, default: []
     field :author_id, :id
-    field :user_id, :id
+    belongs_to :user, Alblog.Accounts.User
 
     timestamps(type: :utc_datetime)
   end
