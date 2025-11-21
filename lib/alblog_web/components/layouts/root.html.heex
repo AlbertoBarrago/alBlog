@@ -19,7 +19,7 @@
     </script>
   </head>
 
-  <body class="bg-base-100 min-h-screen">
+  <body class="bg-base-100 min-h-screen flex flex-col">
     <nav class="w-full relative z-10 flex justify-between items-center px-4 sm:px-6 lg:px-8 shadow-md bg-base-200">
       <.link href={~p"/"} class="flex items-center py-3">
         <span class="text-2xl font-bold text-primary hover:text-primary-focus transition">
@@ -81,6 +81,15 @@
         </li>
       </ul>
     </nav>
-    {@inner_content}
+    <div class="flex-grow">
+      {@inner_content}
+    </div>
+    <footer class="w-full py-4 border-t border-base-300 bg-base-200">
+      <div class="container mx-auto px-4 text-center text-sm text-base-content/60">
+        Made with <span class="text-error">❤️</span>
+        by <span class="font-semibold text-primary">albz</span>
+        · v{Application.spec(:alblog, :vsn)}
+      </div>
+    </footer>
   </body>
 </html>
