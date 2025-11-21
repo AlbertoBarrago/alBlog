@@ -33,7 +33,7 @@
           <article class="border-b border-base-300 pb-6 last:border-0">
             <div class="flex items-center gap-2 text-sm text-base-content/60 mb-2">
               <time datetime={article.published_at}>
-                {Calendar.strftime(article.published_at || DateTime.utc_now(), "%b %d, %Y")}
+                {Calendar.strftime(article.published_at || DateTime.utc_now(), "%d-%m-%Y %H:%M")}
               </time>
               <%= if article.category && article.category != [] do %>
                 <span>•</span>
@@ -67,12 +67,6 @@
           </article>
         <% end %>
       <% end %>
-    </div>
-
-    <div class="mt-8">
-      <a href="/articles" class="btn btn-primary btn-outline">
-        View All Articles
-      </a>
     </div>
   </div>
 </div>

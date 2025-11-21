@@ -63,7 +63,7 @@ defmodule AlblogWeb.ArticleLive.ShowPublic do
       <article class="prose prose-lg prose-slate dark:prose-invert mx-auto">
         <div class="flex items-center gap-3 text-sm text-base-content/60 mb-4">
           <time datetime={@article.published_at}>
-            {Calendar.strftime(@article.published_at || DateTime.utc_now(), "%B %d, %Y")}
+            {Calendar.strftime(@article.published_at || DateTime.utc_now(), "%d-%m-%Y %H:%M")}
           </time>
           <span>•</span>
           <span class="font-medium text-primary">
