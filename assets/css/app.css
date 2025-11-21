@@ -243,6 +243,15 @@ body {
   @apply my-2;
 }
 
+/* Ensure strong and em are distinct despite global font-weight reset */
+.prose strong {
+  font-weight: 700;
+}
+
+.prose em {
+  font-style: italic;
+}
+
 /* Dark mode specific adjustments for headings and blockquotes */
 [data-theme="dark"] .prose h1 {
   @apply border-primary/40;

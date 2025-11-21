@@ -54,8 +54,8 @@ defmodule AlblogWeb.ArticleLive.Index do
                   </.link>
                 </h3>
                 <div class="flex flex-wrap gap-2">
-                  <%= for tag <- article.category || [] do %>
-                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary">
+                  <%= for tag <- article.category do %>
+                    <span class={"badge badge-sm #{AlblogWeb.TagHelper.tag_color(tag)}"}>
                       {tag}
                     </span>
                   <% end %>

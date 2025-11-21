@@ -92,21 +92,6 @@ defmodule AlblogWeb.ArticleLive.ShowPublic do
         </.link>
 
         <div class="flex items-center gap-3">
-          <%= if Map.get(assigns, :current_scope) && @current_scope.user.role == "admin" && @article.user_id == @current_scope.user.id do %>
-            <.link
-              navigate={~p"/articles/#{@article}/edit"}
-              class="btn btn-sm btn-primary"
-            >
-              <.icon name="hero-pencil-square" /> Edit
-            </.link>
-            <button
-              phx-click="delete"
-              data-confirm="Are you sure you want to delete this article?"
-              class="btn btn-sm btn-error"
-            >
-              <.icon name="hero-trash" /> Delete
-            </button>
-          <% end %>
           <div class="flex items-center gap-2 text-sm font-medium text-base-content/70 bg-base-200 px-3 py-1.5 rounded-full">
             <span class="relative flex h-3 w-3">
               <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-success opacity-75">
@@ -125,7 +110,7 @@ defmodule AlblogWeb.ArticleLive.ShowPublic do
           </time>
           <div class="flex gap-1.5">
             <%= for tag <- @article.category do %>
-              <span class="badge badge-primary badge-sm">
+              <span class={"badge badge-sm #{AlblogWeb.TagHelper.tag_color(tag)}"}>
                 {tag}
               </span>
             <% end %>
@@ -152,8 +137,25 @@ defmodule AlblogWeb.ArticleLive.ShowPublic do
 
       <div class="mt-16 pt-8 border-t border-base-300">
         <div class="flex justify-between items-center">
-          <div class="text-sm text-base-content/60">
+          <div class="text-sm text-base-content/60 flex items-center gap-3">
             Thanks for reading!
+            <%= if Map.get(assigns, :current_scope) && @current_scope.user.role == "admin" && @article.user_id == @current_scope.user.id do %>
+              <div class="flex items-center gap-2 ml-4 border-l border-base-300 pl-4">
+                <.link
+                  navigate={~p"/articles/#{@article}/edit"}
+                  class="btn btn-sm btn-ghost text-primary hover:bg-primary/10"
+                >
+                  <.icon name="hero-pencil-square" /> Edit
+                </.link>
+                <button
+                  phx-click="delete"
+                  data-confirm="Are you sure you want to delete this article?"
+                  class="btn btn-sm btn-ghost text-error hover:bg-error/10"
+                >
+                  <.icon name="hero-trash" /> Delete
+                </button>
+              </div>
+            <% end %>
           </div>
           <.link navigate={~p"/"} class="btn btn-outline btn-sm">
             Read more articles

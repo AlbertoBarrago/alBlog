@@ -40,8 +40,8 @@ defmodule AlblogWeb.ArticleLive.Show do
         <:item title="Published at">{@article.published_at}</:item>
         <:item title="Category">
           <div class="flex flex-wrap gap-2">
-            <%= for tag <- @article.category || [] do %>
-              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+            <%= for tag <- @article.category do %>
+              <span class={"badge badge-sm #{AlblogWeb.TagHelper.tag_color(tag)}"}>
                 {tag}
               </span>
             <% end %>
