@@ -93,6 +93,8 @@ defmodule AlblogWeb.Layouts do
 
   See <head> in root.html.heex which applies the theme before page load.
   """
+  attr :tabindex, :integer, default: nil, doc: "optional tabindex for keyboard navigation"
+
   def theme_toggle(assigns) do
     ~H"""
     <div class="card relative flex flex-row items-center border-2 border-base-300 bg-base-300 rounded-full">
@@ -103,6 +105,7 @@ defmodule AlblogWeb.Layouts do
         phx-click={JS.dispatch("phx:set-theme")}
         data-phx-theme="light"
         title="Light mode"
+        tabindex={@tabindex}
       >
         <.icon
           name="hero-sun-micro"
@@ -115,6 +118,7 @@ defmodule AlblogWeb.Layouts do
         phx-click={JS.dispatch("phx:set-theme")}
         data-phx-theme="dark"
         title="Dark mode"
+        tabindex={@tabindex && @tabindex + 1}
       >
         <.icon
           name="hero-moon-micro"

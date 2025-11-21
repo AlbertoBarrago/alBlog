@@ -20,7 +20,7 @@
   </div>
 
   <div>
-    <h2 class="text-2xl font-bold mb-6">Latest Articles</h2>
+    <h2 class="text-2xl text-primary font-bold mb-6">Latest Articles</h2>
 
     <div class="space-y-6">
       <%= if Enum.empty?(@articles) do %>
@@ -39,25 +39,19 @@
                 <span>•</span>
                 <div class="flex gap-1.5">
                   <%= for tag <- article.category do %>
-                    <span class="badge badge-primary badge-sm">
+                    <span class={"badge badge-sm #{AlblogWeb.TagHelper.tag_color(tag)}"}>
                       {tag}
                     </span>
                   <% end %>
                 </div>
               <% end %>
-              <span class="mx-1">•</span>
-              <span>
-                By <span class="font-medium text-primary">{article.user.username}</span>
-              </span>
             </div>
             <h3 class="text-xl font-semibold mb-2">
               <.link navigate={~p"/articles/#{article}"} class="hover:text-primary transition">
                 {article.title}
               </.link>
             </h3>
-            <div class="text-base-content/70 mb-3 line-clamp-2 prose prose-sm max-w-none">
-              {AlblogWeb.MarkdownHelper.to_html(article.content) |> Phoenix.HTML.raw()}
-            </div>
+
             <.link
               navigate={~p"/articles/#{article}"}
               class="text-sm font-medium text-primary hover:text-primary-focus transition"
