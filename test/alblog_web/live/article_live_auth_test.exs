@@ -2,7 +2,6 @@ defmodule AlblogWeb.ArticleLiveAuthTest do
   use AlblogWeb.ConnCase
 
   import Phoenix.LiveViewTest
-  import Alblog.AccountsFixtures
 
   setup :register_and_log_in_user
 

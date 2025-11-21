@@ -61,14 +61,16 @@
   <body class="bg-base-100 min-h-screen flex flex-col">
     <nav class="w-full relative z-10 flex justify-between items-center px-4 sm:px-6 lg:px-8 shadow-md bg-base-200">
       <div class="flex items-center gap-3">
-        <.link href={~p"/"} class="flex items-center py-3 group">
-          <span class="text-2xl font-bold bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent hover:scale-110 transition-transform duration-300 ease-out">
+        <.link href={~p"/"} class="flex items-center py-3 group" tabindex="1">
+          <span class="text-2xl font-bold bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
             alBlog
           </span>
         </.link>
         <%= if @current_scope do %>
-          <span class="hidden md:inline-block text-sm font-semibold text-primary/80 border-l-2 border-primary/30 pl-3 ml-1">
-            @{@current_scope.user.username || @current_scope.user.email}
+          <span class="hidden md:inline-block text-sm font-semibold text-primary/80 hover:text-primary transition duration-300 ease-out border-l-2 border-primary/30 pl-3 ml-1">
+            <.link href={~p"/users/settings"} alt="Settings" title="Settings" tabindex="2">
+              @{@current_scope.user.username || @current_scope.user.email}
+            </.link>
           </span>
         <% end %>
       </div>
@@ -77,19 +79,20 @@
         <%= if @current_scope do %>
           <li>
             <.link
-              href={~p"/articles"}
-              class="text-base-content hover:text-primary transition flex items-center gap-1.5"
+              href={~p"/articles/new"}
+              class="text-primary hover:text-accent transition duration-300 ease-out flex items-center gap-1.5"
+              tabindex="3"
             >
-              <.icon name="hero-newspaper" class="w-5 h-5" /> Articles
+              <.icon name="hero-plus" class="w-5 h-5" />
             </.link>
           </li>
-
           <li>
             <.link
-              href={~p"/users/settings"}
-              class="text-base-content hover:text-primary transition flex items-center gap-1.5"
+              href={~p"/articles"}
+              class="text-base-content hover:text-accent transition flex items-center gap-1.5"
+              tabindex="4"
             >
-              <.icon name="hero-cog-6-tooth" class="w-5 h-5" /> Settings
+              <.icon name="hero-newspaper" class="w-5 h-5" />
             </.link>
           </li>
           <li>
@@ -97,6 +100,7 @@
               href={~p"/users/log-out"}
               method="delete"
               class="text-base-content hover:text-error transition flex items-center gap-1.5"
+              tabindex="5"
             >
               <.icon name="hero-arrow-right-on-rectangle" class="w-5 h-5" />
             </.link>
@@ -106,6 +110,7 @@
             <.link
               href={~p"/articles"}
               class="text-base-content hover:text-primary transition flex items-center gap-1.5"
+              tabindex="3"
             >
               <.icon name="hero-newspaper" class="w-5 h-5" /> Articles
             </.link>
@@ -114,6 +119,7 @@
             <.link
               href={~p"/users/register"}
               class="text-base-content hover:text-primary transition"
+              tabindex="4"
             >
               Register
             </.link>
@@ -122,13 +128,14 @@
             <.link
               href={~p"/users/log-in"}
               class="font-semibold px-3 py-1 rounded bg-primary hover:bg-primary-focus text-primary-content transition"
+              tabindex="5"
             >
               Log in
             </.link>
           </li>
         <% end %>
         <li>
-          <.theme_toggle />
+          <.theme_toggle tabindex={6} />
         </li>
       </ul>
 
@@ -136,6 +143,7 @@
         id="mobile-menu-button"
         class="md:hidden p-2 text-base-content hover:text-primary transition"
         aria-label="Toggle menu"
+        tabindex="-1"
       >
         <.icon name="hero-bars-3" class="w-6 h-6" />
       </button>
@@ -159,6 +167,7 @@
             id="mobile-menu-close"
             class="p-2 text-base-content hover:text-error transition"
             aria-label="Close menu"
+            tabindex="-1"
           >
             <.icon name="hero-x-mark" class="w-6 h-6" />
           </button>
@@ -166,23 +175,22 @@
 
         <ul class="flex flex-col gap-2 p-4 flex-grow">
           <%= if @current_scope do %>
-            <li class="px-3 py-2 text-sm font-semibold text-primary border-b border-base-300 mb-2">
-              @{@current_scope.user.username || @current_scope.user.email}
-            </li>
             <li>
               <.link
-                href={~p"/articles"}
-                class="block px-3 py-2 text-base-content hover:bg-base-300 hover:text-primary rounded transition"
+                href={~p"/articles/new"}
+                class="block px-3 py-2 text-base-content hover:bg-base-300 hover:text-primary rounded transition flex items-center gap-2"
+                tabindex="-1"
               >
-                <.icon name="hero-newspaper" class="w-5 h-5" /> Articles
+                <.icon name="hero-plus" class="w-5 h-5" /> Add Article
               </.link>
             </li>
             <li>
               <.link
-                href={~p"/users/settings"}
+                href={~p"/articles"}
                 class="block px-3 py-2 text-base-content hover:bg-base-300 hover:text-primary rounded transition flex items-center gap-2"
+                tabindex="-1"
               >
-                <.icon name="hero-cog-6-tooth" class="w-5 h-5" /> Settings
+                <.icon name="hero-newspaper" class="w-5 h-5" /> Articles List
               </.link>
             </li>
             <li>
@@ -190,6 +198,7 @@
                 href={~p"/users/log-out"}
                 method="delete"
                 class="block px-3 py-2 text-base-content hover:bg-base-300 hover:text-error rounded transition flex items-center gap-2"
+                tabindex="-1"
               >
                 <.icon name="hero-arrow-right-on-rectangle" class="w-5 h-5" /> Log out
               </.link>
@@ -199,6 +208,7 @@
               <.link
                 href={~p"/articles"}
                 class="block px-3 py-2 text-base-content hover:bg-base-300 hover:text-primary rounded transition flex items-center gap-2"
+                tabindex="-1"
               >
                 <.icon name="hero-newspaper" class="w-5 h-5" /> Articles
               </.link>
@@ -207,6 +217,7 @@
               <.link
                 href={~p"/users/register"}
                 class="block px-3 py-2 text-base-content hover:bg-base-300 hover:text-primary rounded transition"
+                tabindex="-1"
               >
                 Register
               </.link>
@@ -215,6 +226,7 @@
               <.link
                 href={~p"/users/log-in"}
                 class="block px-3 py-2 bg-primary hover:bg-primary-focus text-primary-content rounded transition text-center font-semibold"
+                tabindex="-1"
               >
                 Log in
               </.link>

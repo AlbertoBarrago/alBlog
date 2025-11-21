@@ -37,7 +37,10 @@ defmodule AlblogWeb.ArticleLive.Form do
               </button>
             </div>
             <%= if @preview_mode do %>
-              <div class="prose prose-slate max-w-none p-4 border rounded-md bg-base-100 min-h-[16rem]">
+              <div
+                class="prose prose-slate max-w-none p-4 border rounded-md bg-base-100 min-h-[16rem]"
+                tabindex="-1"
+              >
                 {AlblogWeb.MarkdownHelper.to_html(@form[:content].value) |> Phoenix.HTML.raw()}
               </div>
               <input type="hidden" name={@form[:content].name} value={@form[:content].value} />

@@ -65,11 +65,6 @@ defmodule AlblogWeb.ArticleLive.ShowPublic do
           <time datetime={@article.published_at}>
             {Calendar.strftime(@article.published_at || DateTime.utc_now(), "%d-%m-%Y %H:%M")}
           </time>
-          <span>•</span>
-          <span class="font-medium text-primary">
-            By {@article.user.username}
-          </span>
-          <span>•</span>
           <div class="flex gap-1.5">
             <%= for tag <- @article.category do %>
               <span class="badge badge-primary badge-sm">
@@ -83,7 +78,16 @@ defmodule AlblogWeb.ArticleLive.ShowPublic do
           {@article.title}
         </h1>
 
-        <div class="mt-8 text-base-content/80 leading-relaxed prose prose-lg max-w-none">
+        <div class="flex items-center gap-3 text-sm text-base-content/30">
+          <span class="font-medium">
+            Written by:
+            <span class="font-medium text-secondary">
+              {@article.user.username}
+            </span>
+          </span>
+        </div>
+
+        <div class="mt-4 text-base-content/80 leading-relaxed prose prose-lg max-w-none">
           {AlblogWeb.MarkdownHelper.to_html(@article.content) |> Phoenix.HTML.raw()}
         </div>
       </article>
