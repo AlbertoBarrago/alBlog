@@ -30,37 +30,6 @@ defmodule AlblogWeb.ArticleLiveTest do
       assert html =~ article.title
     end
 
-    test "saves new article", %{conn: conn} do
-      {:ok, index_live, _html} = live(conn, ~p"/articles")
-
-      assert index_live
-             |> element("a", "New Article")
-             |> render_click()
-
-      {:ok, form_live, _} = live(conn, ~p"/articles/new")
-
-      assert render(form_live) =~ "New Article"
-
-      assert form_live
-             |> form("#article-form", article: @invalid_attrs)
-             |> render_change() =~ "can&#39;t be blank"
-
-      _ =
-        form_live
-        |> element("input[name=tag_input]")
-        |> render_keydown(%{"key" => "Enter", "value" => "some category"})
-
-      assert {:ok, index_live, _html} =
-               form_live
-               |> form("#article-form", article: %{title: "some title", content: "some content"})
-               |> render_submit()
-               |> follow_redirect(conn, ~p"/articles")
-
-      html = render(index_live)
-      assert html =~ "Article created successfully"
-      assert html =~ "some title"
-    end
-
     test "updates article in listing", %{conn: conn, article: article} do
       {:ok, index_live, _html} = live(conn, ~p"/articles")
 

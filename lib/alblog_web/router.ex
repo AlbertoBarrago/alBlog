@@ -72,15 +72,10 @@ defmodule AlblogWeb.Router do
       live "/users/reset-password", UserLive.ForgotPassword, :new
       live "/users/reset-password/:token", UserLive.ResetPassword, :edit
       live "/articles", ArticleLive.Index, :index
+      live "/articles/:id", ArticleLive.ShowPublic, :show
     end
 
     post "/users/log-in", UserSessionController, :create
     delete "/users/log-out", UserSessionController, :delete
-  end
-
-  scope "/", AlblogWeb do
-    pipe_through :browser
-
-    live "/articles/:id", ArticleLive.ShowPublic, :show
   end
 end

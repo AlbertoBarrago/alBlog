@@ -12,6 +12,11 @@ defmodule AlblogWeb.ArticleLive.ShowPublic do
       # Subscribe to the topic
       Phoenix.PubSub.subscribe(Alblog.PubSub, "#{@topic}:#{id}")
 
+      # Subscribe to article updates if user is logged in
+      if socket.assigns[:current_scope] do
+        Blog.subscribe_articles(socket.assigns.current_scope)
+      end
+
       # Track presence
       {:ok, _} =
         Presence.track(self(), "#{@topic}:#{id}", socket.id, %{
@@ -29,8 +34,44 @@ defmodule AlblogWeb.ArticleLive.ShowPublic do
   end
 
   @impl true
+  def handle_event("delete", _params, socket) do
+    case Blog.delete_article(socket.assigns.current_scope, socket.assigns.article) do
+      {:ok, _article} ->
+        {:noreply,
+         socket
+         |> put_flash(:info, "Article deleted successfully.")
+         |> push_navigate(to: ~p"/articles")}
+
+      {:error, _changeset} ->
+        {:noreply, put_flash(socket, :error, "Failed to delete article.")}
+    end
+  end
+
+  @impl true
   def handle_info(%{event: "presence_diff"}, socket) do
     {:noreply, assign(socket, :reader_count, get_reader_count(socket.assigns.article.id))}
+  end
+
+  def handle_info(
+        {:updated, %Alblog.Blog.Article{id: id} = article},
+        %{assigns: %{article: %{id: id}}} = socket
+      ) do
+    {:noreply, assign(socket, :article, article)}
+  end
+
+  def handle_info(
+        {:deleted, %Alblog.Blog.Article{id: id}},
+        %{assigns: %{article: %{id: id}}} = socket
+      ) do
+    {:noreply,
+     socket
+     |> put_flash(:error, "The current article was deleted.")
+     |> push_navigate(to: ~p"/articles")}
+  end
+
+  def handle_info({type, %Alblog.Blog.Article{}}, socket)
+      when type in [:created, :updated, :deleted] do
+    {:noreply, socket}
   end
 
   defp get_reader_count(article_id) do
@@ -50,13 +91,30 @@ defmodule AlblogWeb.ArticleLive.ShowPublic do
           <.icon name="hero-arrow-left-mini" class="w-4 h-4" /> Back to Home
         </.link>
 
-        <div class="flex items-center gap-2 text-sm font-medium text-base-content/70 bg-base-200 px-3 py-1.5 rounded-full">
-          <span class="relative flex h-3 w-3">
-            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-success opacity-75">
+        <div class="flex items-center gap-3">
+          <%= if Map.get(assigns, :current_scope) && @current_scope.user.role == "admin" && @article.user_id == @current_scope.user.id do %>
+            <.link
+              navigate={~p"/articles/#{@article}/edit"}
+              class="btn btn-sm btn-primary"
+            >
+              <.icon name="hero-pencil-square" /> Edit
+            </.link>
+            <button
+              phx-click="delete"
+              data-confirm="Are you sure you want to delete this article?"
+              class="btn btn-sm btn-error"
+            >
+              <.icon name="hero-trash" /> Delete
+            </button>
+          <% end %>
+          <div class="flex items-center gap-2 text-sm font-medium text-base-content/70 bg-base-200 px-3 py-1.5 rounded-full">
+            <span class="relative flex h-3 w-3">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-success opacity-75">
+              </span>
+              <span class="relative inline-flex rounded-full h-3 w-3 bg-success"></span>
             </span>
-            <span class="relative inline-flex rounded-full h-3 w-3 bg-success"></span>
-          </span>
-          <span>{@reader_count} reading now</span>
+            <span>{@reader_count} reading now</span>
+          </div>
         </div>
       </div>
 

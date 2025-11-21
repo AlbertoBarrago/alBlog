@@ -234,6 +234,11 @@ body {
   @apply border-l-4 border-primary/50 bg-base-200/50 pl-4 pr-4 py-3 my-4 italic text-base-content/80 rounded-r;
 }
 
+/* Horizontal rule spacing */
+.prose hr {
+  @apply my-6 border-base-content/20;
+}
+
 .prose blockquote p {
   @apply my-2;
 }

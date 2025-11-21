@@ -14,9 +14,18 @@ defmodule AlblogWeb.ArticleLive.Show do
           <.button navigate={~p"/articles"}>
             <.icon name="hero-arrow-left" />
           </.button>
-          <.button variant="primary" navigate={~p"/articles/#{@article}/edit?return_to=show"}>
-            <.icon name="hero-pencil-square" /> Edit article
-          </.button>
+          <%= if @current_scope && @current_scope.role == :admin do %>
+            <.button variant="primary" navigate={~p"/articles/#{@article}/edit?return_to=show"}>
+              <.icon name="hero-pencil-square" /> Edit article
+            </.button>
+            <.button
+              phx-click="delete"
+              data-confirm="Are you sure you want to delete this article?"
+              class="btn-error"
+            >
+              <.icon name="hero-trash" /> Delete
+            </.button>
+          <% end %>
         </:actions>
       </.header>
 
@@ -53,6 +62,20 @@ defmodule AlblogWeb.ArticleLive.Show do
      socket
      |> assign(:page_title, "Show Article")
      |> assign(:article, Blog.get_article!(socket.assigns.current_scope, id))}
+  end
+
+  @impl true
+  def handle_event("delete", _params, socket) do
+    case Blog.delete_article(socket.assigns.current_scope, socket.assigns.article) do
+      {:ok, _article} ->
+        {:noreply,
+         socket
+         |> put_flash(:info, "Article deleted successfully.")
+         |> push_navigate(to: ~p"/articles")}
+
+      {:error, _changeset} ->
+        {:noreply, put_flash(socket, :error, "Failed to delete article.")}
+    end
   end
 
   @impl true

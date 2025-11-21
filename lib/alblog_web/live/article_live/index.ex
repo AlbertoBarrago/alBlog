@@ -2,20 +2,14 @@ defmodule AlblogWeb.ArticleLive.Index do
   use AlblogWeb, :live_view
 
   alias Alblog.Blog
-  alias Alblog.Accounts
 
   @impl true
   def render(assigns) do
     ~H"""
     <Layouts.app flash={@flash} current_scope={@current_scope}>
       <.header>
-        <div class="flex justify-between items-center mb-8">
+        <div class="flex justify-center mx-auto items-center mb-8">
           <h1 class="text-3xl font-bold text-primary">Articles</h1>
-          <%= if @current_scope && @current_scope.user && Accounts.User.is_admin?(@current_scope.user) do %>
-            <.link href={~p"/articles/new"}>
-              <.button variant="primary">New Article</.button>
-            </.link>
-          <% end %>
         </div>
       </.header>
 
