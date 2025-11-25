@@ -4,6 +4,25 @@ defmodule AlblogWeb.ArticleLive.Form do
   alias Alblog.Blog
   alias Alblog.Blog.Article
 
+  @allowed_tags [
+    "Elixir",
+    "Phoenix",
+    "HTML",
+    "CSS",
+    "JS",
+    "Python",
+    "C",
+    "C++",
+    "Assembly",
+    "Terminal",
+    "Angular",
+    "React",
+    "Nvim",
+    "Vim",
+    "IT",
+    "Architecture"
+  ]
+
   @impl true
   def render(assigns) do
     ~H"""
@@ -65,47 +84,72 @@ defmodule AlblogWeb.ArticleLive.Form do
         <div class="fieldset mb-2">
           <label>
             <span class="label mb-1">Categories (Tags)</span>
-            <div class="input input-bordered w-full min-h-[2.5rem] h-auto flex flex-wrap items-center gap-2 p-2 focus-within:outline-2 focus-within:outline-primary">
-              <%= if @tags != [] do %>
-                <%= for {tag, index} <- Enum.with_index(@tags) do %>
-                  <span class={[
-                    "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium transition-all",
-                    case rem(index, 3) do
-                      0 -> "bg-primary text-primary-content"
-                      1 -> "bg-info text-info-content"
-                      2 -> "bg-success text-success-content"
-                    end
-                  ]}>
-                    {tag}
+            <div class="relative">
+              <div class="input input-bordered w-full min-h-[2.5rem] h-auto flex flex-wrap items-center gap-2 p-2 focus-within:outline-2 focus-within:outline-primary">
+                <%= if @tags != [] do %>
+                  <%= for {tag, index} <- Enum.with_index(@tags) do %>
+                    <span class={[
+                      "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium transition-all",
+                      case rem(index, 3) do
+                        0 -> "bg-primary text-primary-content"
+                        1 -> "bg-info text-info-content"
+                        2 -> "bg-success text-success-content"
+                      end
+                    ]}>
+                      {tag}
+                      <button
+                        type="button"
+                        phx-click="remove_tag"
+                        phx-value-tag={tag}
+                        class="inline-flex items-center justify-center hover:bg-base-content/20 rounded-full p-0.5 transition-colors focus:outline-none"
+                      >
+                        <span class="sr-only">Remove tag</span>
+                        <svg class="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 20 20">
+                          <path
+                            fill-rule="evenodd"
+                            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L10 10 5.707 5.707a1 1 0 010-1.414z"
+                            clip-rule="evenodd"
+                          />
+                        </svg>
+                      </button>
+                    </span>
+                    <input type="hidden" name="article[category][]" value={tag} />
+                  <% end %>
+                <% end %>
+                <input type="hidden" name="article[category][]" value="" />
+                <input
+                  type="text"
+                  id="tag-input"
+                  name="tag_input"
+                  value={@current_tag}
+                  phx-hook="TagInput"
+                  phx-change="update_tag_input"
+                  placeholder={
+                    if @tags == [], do: "Type to filter tags, press Enter to add", else: ""
+                  }
+                  class="flex-1 min-w-[120px] outline-none bg-transparent text-base-content border-none focus:ring-0 p-0"
+                  autocomplete="off"
+                />
+              </div>
+              <%= if @current_tag != "" and @filtered_tags != [] do %>
+                <div
+                  id="tag-dropdown"
+                  phx-hook="TagDropdown"
+                  class="absolute z-10 w-full bg-base-100 border border-base-300 rounded-md shadow-lg max-h-60 overflow-auto"
+                  style="bottom: auto; top: 100%; margin-top: 0.25rem;"
+                >
+                  <%= for tag <- @filtered_tags do %>
                     <button
                       type="button"
-                      phx-click="remove_tag"
+                      phx-click="add_tag"
                       phx-value-tag={tag}
-                      class="inline-flex items-center justify-center hover:bg-base-content/20 rounded-full p-0.5 transition-colors focus:outline-none"
+                      class="w-full text-left px-4 py-2 hover:bg-base-200 transition-colors text-base-content"
                     >
-                      <span class="sr-only">Remove tag</span>
-                      <svg class="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 20 20">
-                        <path
-                          fill-rule="evenodd"
-                          d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L10 10 5.707 5.707a1 1 0 010-1.414z"
-                          clip-rule="evenodd"
-                        />
-                      </svg>
+                      {tag}
                     </button>
-                  </span>
-                  <input type="hidden" name="article[category][]" value={tag} />
-                <% end %>
+                  <% end %>
+                </div>
               <% end %>
-              <input type="hidden" name="article[category][]" value="" />
-              <input
-                type="text"
-                name="tag_input"
-                value={@current_tag}
-                phx-keydown="handle_key"
-                phx-change="update_tag_input"
-                placeholder={if @tags == [], do: "Type and press Space or Tab to add tag", else: ""}
-                class="flex-1 min-w-[120px] outline-none bg-transparent text-base-content border-none focus:ring-0 p-0"
-              />
             </div>
           </label>
         </div>
@@ -128,6 +172,7 @@ defmodule AlblogWeb.ArticleLive.Form do
        socket
        |> assign(:return_to, return_to(params["return_to"]))
        |> assign(:current_tag, "")
+       |> assign(:filtered_tags, @allowed_tags)
        |> assign(:preview_mode, false)
        |> apply_action(socket.assigns.live_action, params)}
     else
@@ -179,14 +224,23 @@ defmodule AlblogWeb.ArticleLive.Form do
   end
 
   def handle_event("update_tag_input", %{"tag_input" => value}, socket) do
-    {:noreply, assign(socket, current_tag: value)}
+    # Filter allowed tags based on input
+    filtered =
+      if value == "" do
+        @allowed_tags
+      else
+        @allowed_tags
+        |> Enum.filter(fn tag ->
+          String.downcase(tag) |> String.contains?(String.downcase(value))
+        end)
+      end
+
+    {:noreply, socket |> assign(current_tag: value) |> assign(filtered_tags: filtered)}
   end
 
-  def handle_event("handle_key", %{"key" => key, "value" => value}, socket)
-      when key in [" ", "Tab", "Enter"] do
-    tag = String.trim(value)
-
-    if tag != "" and tag not in socket.assigns.tags do
+  def handle_event("add_tag", %{"tag" => tag}, socket) do
+    # Only add if tag is in allowed list and not already added
+    if tag in @allowed_tags and tag not in socket.assigns.tags do
       new_tags = socket.assigns.tags ++ [tag]
 
       # Update the changeset with new tags
@@ -201,9 +255,50 @@ defmodule AlblogWeb.ArticleLive.Form do
        socket
        |> assign(:tags, new_tags)
        |> assign(:current_tag, "")
+       |> assign(:filtered_tags, @allowed_tags)
        |> assign(:form, to_form(changeset))}
     else
-      {:noreply, assign(socket, current_tag: "")}
+      {:noreply, socket |> assign(current_tag: "") |> assign(filtered_tags: @allowed_tags)}
+    end
+  end
+
+  def handle_event("handle_key", %{"key" => "Enter", "value" => value}, socket) do
+    # Try to find exact match or first filtered match
+    tag =
+      cond do
+        # Exact match (case insensitive)
+        exact_match =
+            Enum.find(@allowed_tags, fn t -> String.downcase(t) == String.downcase(value) end) ->
+          exact_match
+
+        # First filtered match
+        socket.assigns.filtered_tags != [] ->
+          List.first(socket.assigns.filtered_tags)
+
+        # No match
+        true ->
+          nil
+      end
+
+    if tag && tag not in socket.assigns.tags do
+      new_tags = socket.assigns.tags ++ [tag]
+
+      # Update the changeset with new tags
+      article_params =
+        (socket.assigns.form.params || %{})
+        |> Map.put("category", new_tags)
+
+      changeset =
+        Blog.change_article(socket.assigns.current_scope, socket.assigns.article, article_params)
+
+      {:noreply,
+       socket
+       |> assign(:tags, new_tags)
+       |> assign(:current_tag, "")
+       |> assign(:filtered_tags, @allowed_tags)
+       |> assign(:form, to_form(changeset))}
+    else
+      {:noreply, socket |> assign(current_tag: "") |> assign(filtered_tags: @allowed_tags)}
     end
   end
 
@@ -239,9 +334,7 @@ defmodule AlblogWeb.ArticleLive.Form do
         {:noreply,
          socket
          |> put_flash(:info, "Article updated successfully")
-         |> push_navigate(
-           to: return_path(socket.assigns.current_scope, socket.assigns.return_to, article)
-         )}
+         |> push_navigate(to: ~p"/articles/#{article}")}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, form: to_form(changeset))}

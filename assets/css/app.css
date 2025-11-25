@@ -173,11 +173,6 @@ body {
 }
 
 /* Override Prism theme for dark mode */
-[data-theme="dark"] .prose pre[class*="language-"],
-[data-theme="dark"] .prose code[class*="language-"] {
-  background: #0d1117 !important;
-}
-
 [data-theme="dark"] .prose :not(pre)>code {
   @apply bg-base-300 text-primary;
 }
@@ -193,11 +188,6 @@ body {
 }
 
 /* Override Prism theme for light mode */
-[data-theme="light"] .prose pre[class*="language-"],
-[data-theme="light"] .prose code[class*="language-"] {
-  background: #f6f8fa !important;
-}
-
 [data-theme="light"] .prose :not(pre)>code {
   @apply bg-base-200 text-primary;
 }

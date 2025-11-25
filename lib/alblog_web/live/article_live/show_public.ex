@@ -110,9 +110,11 @@ defmodule AlblogWeb.ArticleLive.ShowPublic do
           </time>
           <div class="flex gap-1.5">
             <%= for tag <- @article.category do %>
-              <span class={"badge badge-sm #{AlblogWeb.TagHelper.tag_color(tag)}"}>
-                {tag}
-              </span>
+              <.link navigate={~p"/articles?tag=#{tag}"}>
+                <span class={"badge badge-sm #{AlblogWeb.TagHelper.tag_color(tag)} hover:opacity-80 transition cursor-pointer"}>
+                  {tag}
+                </span>
+              </.link>
             <% end %>
           </div>
         </div>
@@ -163,6 +165,7 @@ defmodule AlblogWeb.ArticleLive.ShowPublic do
         </div>
       </div>
     </div>
+    <Layouts.flash_group flash={@flash} />
     """
   end
 end

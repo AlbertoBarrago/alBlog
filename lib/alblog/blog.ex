@@ -32,28 +32,39 @@ defmodule Alblog.Blog do
   end
 
   @doc """
-  Returns the list of articles.
+  Returns the list of articles, optionally filtered by tag.
 
   ## Examples
 
       iex> list_articles(scope)
       [%Article{}, ...]
 
+      iex> list_articles(scope, "elixir")
+      [%Article{}, ...]
+
   """
-  def list_articles(%Scope{} = scope) do
+  def list_articles(%Scope{} = scope, tag \\ nil) do
     Article
     |> where(user_id: ^scope.user.id)
+    |> filter_by_tag(tag)
     |> Repo.all()
     |> Repo.preload(:user)
   end
 
   @doc """
-  Returns the list of all articles.
+  Returns the list of all articles, optionally filtered by tag.
   """
-  def list_all_articles do
+  def list_all_articles(tag \\ nil) do
     Article
+    |> filter_by_tag(tag)
     |> Repo.all()
     |> Repo.preload(:user)
+  end
+
+  defp filter_by_tag(query, nil), do: query
+
+  defp filter_by_tag(query, tag) do
+    from a in query, where: ^tag in a.category
   end
 
   @doc """

@@ -29,6 +29,7 @@
     </script>
     <!-- Prism.js for syntax highlighting -->
     <link
+      id="prism-theme"
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css"
     />
@@ -55,6 +56,13 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js">
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-lua.min.js">
+    </script>
+    <script>
+      // Add support for HEEx and EEx by aliasing them to HTML/Markup
+      if (typeof Prism !== 'undefined') {
+        Prism.languages.heex = Prism.languages.html;
+        Prism.languages.eex = Prism.languages.html;
+      }
     </script>
   </head>
 

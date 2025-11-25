@@ -8,8 +8,19 @@ defmodule AlblogWeb.ArticleLive.Index do
     ~H"""
     <Layouts.app flash={@flash} current_scope={@current_scope}>
       <.header>
-        <div class="flex justify-center mx-auto items-center mb-8">
-          <h1 class="text-3xl font-bold text-primary">Articles</h1>
+        <div class="flex flex-col items-center mb-8">
+          <h1 class="text-3xl font-bold text-primary mb-2">Articles</h1>
+          <%= if @active_tag do %>
+            <div class="flex items-center gap-2">
+              <span class="text-base-content/70">Filtering by tag:</span>
+              <span class="badge badge-primary gap-2">
+                {@active_tag}
+                <.link patch={~p"/articles"} class="hover:text-primary-content/70">
+                  <.icon name="hero-x-mark" class="w-3 h-3" />
+                </.link>
+              </span>
+            </div>
+          <% end %>
         </div>
       </.header>
 
@@ -55,9 +66,11 @@ defmodule AlblogWeb.ArticleLive.Index do
                 </h3>
                 <div class="flex flex-wrap gap-2">
                   <%= for tag <- article.category do %>
-                    <span class={"badge badge-sm #{AlblogWeb.TagHelper.tag_color(tag)}"}>
-                      {tag}
-                    </span>
+                    <.link navigate={~p"/articles?tag=#{tag}"}>
+                      <span class={"badge badge-sm #{AlblogWeb.TagHelper.tag_color(tag)} hover:opacity-80 transition cursor-pointer"}>
+                        {tag}
+                      </span>
+                    </.link>
                   <% end %>
                 </div>
               </div>
@@ -122,7 +135,18 @@ defmodule AlblogWeb.ArticleLive.Index do
      socket
      |> assign(:current_scope, current_scope)
      |> assign(:page_title, "Listing Articles")
-     |> stream(:articles, list_articles(current_scope))}
+     |> assign(:active_tag, nil)
+     |> stream(:articles, [])}
+  end
+
+  @impl true
+  def handle_params(params, _url, socket) do
+    tag = params["tag"]
+
+    {:noreply,
+     socket
+     |> assign(:active_tag, tag)
+     |> stream(:articles, list_articles(socket.assigns.current_scope, tag), reset: true)}
   end
 
   @impl true
@@ -137,14 +161,19 @@ defmodule AlblogWeb.ArticleLive.Index do
   def handle_info({type, %Alblog.Blog.Article{}}, socket)
       when type in [:created, :updated, :deleted] do
     {:noreply,
-     stream(socket, :articles, list_articles(socket.assigns.current_scope), reset: true)}
+     stream(
+       socket,
+       :articles,
+       list_articles(socket.assigns.current_scope, socket.assigns.active_tag),
+       reset: true
+     )}
   end
 
-  defp list_articles(nil) do
-    Blog.list_all_articles()
+  defp list_articles(nil, tag) do
+    Blog.list_all_articles(tag)
   end
 
-  defp list_articles(current_scope) do
-    Blog.list_articles(current_scope)
+  defp list_articles(current_scope, tag) do
+    Blog.list_articles(current_scope, tag)
   end
 end

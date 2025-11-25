@@ -29,7 +29,47 @@ const csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute
 const liveSocket = new LiveSocket("/live", Socket, {
   longPollFallbackMs: 2500,
   params: { _csrf_token: csrfToken },
-  hooks: { ...colocatedHooks },
+  hooks: {
+    ...colocatedHooks,
+    TagInput: {
+      mounted() {
+        this.el.addEventListener("keydown", (e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            this.pushEvent("handle_key", { key: e.key, value: this.el.value });
+          }
+        });
+      }
+    },
+    TagDropdown: {
+      mounted() {
+        this.positionDropdown();
+      },
+      updated() {
+        this.positionDropdown();
+      },
+      positionDropdown() {
+        const dropdown = this.el;
+        const rect = dropdown.getBoundingClientRect();
+        const viewportHeight = window.innerHeight;
+        const spaceBelow = viewportHeight - rect.top;
+        const dropdownHeight = 240; // max-h-60 = 15rem = 240px
+
+        // If not enough space below, position above
+        if (spaceBelow < dropdownHeight && rect.top > dropdownHeight) {
+          dropdown.style.bottom = "100%";
+          dropdown.style.top = "auto";
+          dropdown.style.marginTop = "0";
+          dropdown.style.marginBottom = "0.25rem";
+        } else {
+          dropdown.style.bottom = "auto";
+          dropdown.style.top = "100%";
+          dropdown.style.marginTop = "0.25rem";
+          dropdown.style.marginBottom = "0";
+        }
+      }
+    }
+  },
 })
 
 // Show progress bar on live navigation and form submits
@@ -39,6 +79,18 @@ window.addEventListener("phx:page-loading-stop", _info => topbar.hide())
 
 // connect if there are any LiveViews on the page
 liveSocket.connect()
+
+// Helper to set Prism theme
+function setPrismTheme(theme) {
+  const prismLink = document.getElementById("prism-theme");
+  if (prismLink) {
+    if (theme === "dark") {
+      prismLink.href = "https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css";
+    } else {
+      prismLink.href = "https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css";
+    }
+  }
+}
 
 // Theme toggle handler
 window.addEventListener("phx:set-theme", (e) => {
@@ -50,10 +102,12 @@ window.addEventListener("phx:set-theme", (e) => {
     html.setAttribute("data-theme", systemTheme);
     html.setAttribute("data-theme-selection", "system");
     localStorage.setItem("theme", "system");
+    setPrismTheme(systemTheme);
   } else {
     html.setAttribute("data-theme", theme);
     html.setAttribute("data-theme-selection", theme);
     localStorage.setItem("theme", theme);
+    setPrismTheme(theme);
   }
 });
 
@@ -66,15 +120,19 @@ document.addEventListener("DOMContentLoaded", () => {
     const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
     html.setAttribute("data-theme", systemTheme);
     html.setAttribute("data-theme-selection", "system");
+    setPrismTheme(systemTheme);
   } else {
     html.setAttribute("data-theme", savedTheme);
     html.setAttribute("data-theme-selection", savedTheme);
+    setPrismTheme(savedTheme);
   }
 
   // Listen for system theme changes when in system mode
   window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (e) => {
     if (localStorage.getItem("theme") === "system") {
-      html.setAttribute("data-theme", e.matches ? "dark" : "light");
+      const newTheme = e.matches ? "dark" : "light";
+      html.setAttribute("data-theme", newTheme);
+      setPrismTheme(newTheme);
     }
   });
 
