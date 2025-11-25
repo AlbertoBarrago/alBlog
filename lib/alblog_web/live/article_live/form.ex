@@ -18,9 +18,20 @@ defmodule AlblogWeb.ArticleLive.Form do
     "Angular",
     "React",
     "Nvim",
+    "Neovim",
+    "Emacs",
     "Vim",
     "IT",
-    "Architecture"
+    "Architecture",
+    "Docker",
+    "Kubernetes",
+    "AWS",
+    "GCP",
+    "Azure",
+    "Linux",
+    "Windows",
+    "MacOS",
+    ""
   ]
 
   @impl true
