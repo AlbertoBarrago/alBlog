@@ -90,8 +90,6 @@ defmodule AlblogWeb.ArticleLive.Form do
           <% end %>
         </div>
 
-        <.input field={@form[:published_at]} type="datetime-local" label="Published at" />
-
         <div class="fieldset mb-2">
           <label>
             <span class="label mb-1">Categories (Tags)</span>

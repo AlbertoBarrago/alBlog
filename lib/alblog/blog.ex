@@ -47,6 +47,7 @@ defmodule Alblog.Blog do
     Article
     |> where(user_id: ^scope.user.id)
     |> filter_by_tag(tag)
+    |> order_by([a], desc: a.published_at)
     |> Repo.all()
     |> Repo.preload(:user)
   end
@@ -57,6 +58,7 @@ defmodule Alblog.Blog do
   def list_all_articles(tag \\ nil) do
     Article
     |> filter_by_tag(tag)
+    |> order_by([a], desc: a.published_at)
     |> Repo.all()
     |> Repo.preload(:user)
   end
