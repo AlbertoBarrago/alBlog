@@ -41,9 +41,11 @@ defmodule AlblogWeb.ArticleLive.Show do
         <:item title="Category">
           <div class="flex flex-wrap gap-2">
             <%= for tag <- @article.category do %>
-              <span class={"badge badge-sm #{AlblogWeb.TagHelper.tag_color(tag)}"}>
-                {tag}
-              </span>
+              <.link navigate={~p"/articles?tag=#{tag}"}>
+                <span class={"badge badge-sm #{AlblogWeb.TagHelper.tag_color(tag)} hover:opacity-80 transition cursor-pointer"}>
+                  {tag}
+                </span>
+              </.link>
             <% end %>
           </div>
         </:item>

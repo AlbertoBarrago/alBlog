@@ -47,8 +47,7 @@ defmodule AlblogWeb.ArticleLiveTest do
 
       _ =
         form_live
-        |> element("input[name=tag_input]")
-        |> render_keydown(%{"key" => "Enter", "value" => "some updated category"})
+        |> render_hook("handle_key", %{"key" => "Enter", "value" => "some updated category"})
 
       assert {:ok, index_live, _html} =
                form_live
@@ -56,7 +55,7 @@ defmodule AlblogWeb.ArticleLiveTest do
                  article: %{title: "some updated title", content: "some updated content"}
                )
                |> render_submit()
-               |> follow_redirect(conn, ~p"/articles")
+               |> follow_redirect(conn, ~p"/articles/#{article}")
 
       html = render(index_live)
       assert html =~ "Article updated successfully"

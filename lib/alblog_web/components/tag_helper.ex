@@ -1,18 +1,21 @@
 defmodule AlblogWeb.TagHelper do
-  def tag_color("elixir"), do: "badge-primary"
-  def tag_color("javascript"), do: "badge-warning"
-  def tag_color("python"), do: "badge-success"
-  def tag_color("ruby"), do: "badge-error"
-  def tag_color("go"), do: "badge-info"
-  def tag_color("rust"), do: "badge-secondary"
-  def tag_color("java"), do: "badge-accent"
-  def tag_color("typescript"), do: "badge-warning"
-  def tag_color("bash"), do: "badge-neutral"
-  def tag_color("sql"), do: "badge-success"
-  def tag_color("lua"), do: "badge-purple"
-  def tag_color("neovim"), do: "badge-secondary"
-  def tag_color("vim"), do: "badge-success"
-  def tag_color("terminal"), do: "badge-info"
+  @doc """
+  Returns a consistent badge color class for a given tag.
+  Uses a hash of the tag name to ensure the same tag always gets the same color.
+  """
+  def tag_color(tag) when is_binary(tag) do
+    # Use Erlang's :erlang.phash2 to get a consistent hash for the tag
+    hash = :erlang.phash2(tag, 6)
+
+    case hash do
+      0 -> "badge-primary"
+      1 -> "badge-secondary"
+      2 -> "badge-accent"
+      3 -> "badge-info"
+      4 -> "badge-success"
+      5 -> "badge-warning"
+    end
+  end
 
   def tag_color(_), do: "badge-ghost"
 end
