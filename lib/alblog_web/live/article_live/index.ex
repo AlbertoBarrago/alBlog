@@ -8,7 +8,7 @@ defmodule AlblogWeb.ArticleLive.Index do
     ~H"""
     <Layouts.app flash={@flash} current_scope={@current_scope}>
       <.header>
-        <div class="flex flex-col items-center mb-8">
+        <div class="flex flex-col items-center mb-4">
           <h1 class="text-3xl font-bold text-primary mb-2">Articles</h1>
           <%= if @active_tag do %>
             <div class="flex items-center gap-2">
@@ -25,7 +25,7 @@ defmodule AlblogWeb.ArticleLive.Index do
       </.header>
 
       <%= if Enum.empty?(@streams.articles.inserts) do %>
-        <div class="col-span-full flex flex-col items-center justify-center py-16 px-4">
+        <div class="col-span-full flex flex-col items-center justify-center py-8 px-4">
           <div class="text-center max-w-md">
             <svg
               class="mx-auto h-24 w-24 text-base-content/20 mb-6"
