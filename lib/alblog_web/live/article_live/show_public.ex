@@ -159,7 +159,7 @@ defmodule AlblogWeb.ArticleLive.ShowPublic do
               </div>
             <% end %>
           </div>
-          <.link navigate={~p"/"} class="btn btn-outline btn-sm">
+          <.link navigate={~p"/articles"} class="btn btn-outline btn-sm">
             Read more articles
           </.link>
         </div>
