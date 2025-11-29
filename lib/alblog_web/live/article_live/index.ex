@@ -8,8 +8,8 @@ defmodule AlblogWeb.ArticleLive.Index do
     ~H"""
     <Layouts.app flash={@flash} current_scope={@current_scope}>
       <.header>
-        <div class="flex flex-col items-center mb-4">
-          <h1 class="text-3xl font-bold text-primary mb-2">Articles</h1>
+        <div class="flex flex-col items-center mb-2">
+          <h1 class="text-3xl font-bold text-primary">Articles</h1>
           <%= if @active_tag do %>
             <div class="flex items-center gap-2">
               <span class="text-base-content/70">Filtering by tag:</span>
