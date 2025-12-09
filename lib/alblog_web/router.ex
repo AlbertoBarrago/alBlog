@@ -2,6 +2,8 @@ defmodule AlblogWeb.Router do
   use AlblogWeb, :router
 
   import AlblogWeb.UserAuth
+  # Import is still correctly at the top
+  import Phoenix.LiveDashboard.Router
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -11,6 +13,14 @@ defmodule AlblogWeb.Router do
     plug :protect_from_forgery
     plug :put_secure_browser_headers
     plug :fetch_current_scope_for_user
+  end
+
+  pipeline :admin_only do
+    plug :browser
+
+    plug :require_authenticated_user
+
+    plug AlblogWeb.Plugs.RequireAdmin
   end
 
   pipeline :api do
@@ -23,24 +33,31 @@ defmodule AlblogWeb.Router do
     get "/", PageController, :home
   end
 
-  # Other scopes may use custom stacks.
-  # scope "/api", AlblogWeb do
-  #   pipe_through :api
-  # end
+  # ======================================================
+  # Dashboard Definition (Defined only once)
+  # ======================================================
 
-  # Enable LiveDashboard and Swoosh mailbox preview in development
+  # In Prod (MIX_ENV=prod), we want the admin protection.
+  # In Dev (MIX_ENV=dev), we often want the protection too,
+  # or sometimes a simpler pipe if you prefer.
+  # We will use :admin_only as the default for the main /dashboard route.
+  scope "/" do
+    # Apply protection to the main dashboard route
+    pipe_through :admin_only
+
+    live_dashboard "/dashboard", metrics: AlblogWeb.Telemetry
+  end
+
+  # ======================================================
+  # DEV Routes (Only for Swoosh Mailbox Preview)
+  # ======================================================
+
   if Application.compile_env(:alblog, :dev_routes) do
-    # If you want to use the LiveDashboard in production, you should put
-    # it behind authentication and allow only admins to access it.
-    # If your application does not have an admins-only section yet,
-    # you can use Plug.BasicAuth to set up some basic authentication
-    # as long as you are also using SSL (which you should anyway).
-    import Phoenix.LiveDashboard.Router
-
+    # Note: We do NOT define live_dashboard here anymore, only forward/mailbox.
+    # The /dashboard is handled above.
     scope "/dev" do
       pipe_through :browser
 
-      live_dashboard "/dashboard", metrics: AlblogWeb.Telemetry
       forward "/mailbox", Plug.Swoosh.MailboxPreview
     end
   end
