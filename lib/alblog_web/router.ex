@@ -1,6 +1,5 @@
 defmodule AlblogWeb.Router do
   use AlblogWeb, :router
-
   import AlblogWeb.UserAuth
   import Phoenix.LiveDashboard.Router
 
@@ -14,57 +13,44 @@ defmodule AlblogWeb.Router do
     plug :fetch_current_scope_for_user
   end
 
-  pipeline :admin_only do
-    plug :browser
-
-    plug :require_authenticated_user
-
-    plug AlblogWeb.Plugs.RequireAdmin
-  end
-
   pipeline :api do
     plug :accepts, ["json"]
   end
 
+  pipeline :require_auth do
+    plug :require_authenticated_user
+  end
+
+  pipeline :admin do
+    plug AlblogWeb.Plugs.RequireAdmin
+  end
+
   scope "/", AlblogWeb do
     pipe_through :browser
-
     get "/", PageController, :home
   end
 
   # ======================================================
-  # Dashboard Definition (Defined only once)
+  # Dashboard Definition
   # ======================================================
-
-  # In Prod (MIX_ENV=prod), we want the admin protection.
-  # In Dev (MIX_ENV=dev), we often want the protection too,
-  # or sometimes a simpler pipe if you prefer.
-  # We will use :admin_only as the default for the main /dashboard route.
   scope "/" do
-    # Apply protection to the main dashboard route
-    pipe_through :admin_only
-
+    pipe_through [:browser, :require_auth, :admin]
     live_dashboard "/dashboard", metrics: AlblogWeb.Telemetry
   end
 
   # ======================================================
   # DEV Routes (Only for Swoosh Mailbox Preview)
   # ======================================================
-
   if Application.compile_env(:alblog, :dev_routes) do
-    # Note: We do NOT define live_dashboard here anymore, only forward/mailbox.
-    # The /dashboard is handled above.
     scope "/dev" do
       pipe_through :browser
-
       forward "/mailbox", Plug.Swoosh.MailboxPreview
     end
   end
 
   ## Authentication routes
-
   scope "/", AlblogWeb do
-    pipe_through [:browser, :require_authenticated_user]
+    pipe_through [:browser, :require_auth]
 
     live_session :require_authenticated_user,
       on_mount: [{AlblogWeb.UserAuth, :require_authenticated}] do

@@ -5,7 +5,6 @@ defmodule AlblogWeb.Plugs.RequireAdmin do
   """
   import Plug.Conn
   import Phoenix.Controller
-
   alias Alblog.Accounts.User
 
   @doc "Initializes the plug (required by the Plug specification)."
@@ -13,10 +12,10 @@ defmodule AlblogWeb.Plugs.RequireAdmin do
 
   @doc "Checks the user's admin status and redirects if unauthorized."
   def call(conn, _opts) do
-    # L'utente viene assegnato qui se la pipeline precedente ha funzionato
-    current_user = conn.assigns[:current_user]
+    current_user =
+      conn.assigns[:current_user] ||
+        (conn.assigns[:current_scope] && conn.assigns[:current_scope].user)
 
-    # La chiamata ora usa l'alias: User.is_admin?(current_user)
     if current_user && User.is_admin?(current_user) do
       conn
     else
