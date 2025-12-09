@@ -2,21 +2,22 @@ defmodule AlblogWeb.Plugs.RequireAdmin do
   @moduledoc """
   A Plug that ensures the currently authenticated user has administrative
   privileges before allowing access to the route.
-
-  It relies on the presence of `:current_user` in `conn.assigns`, which is
-  set by a preceding authentication Plug.
   """
   import Plug.Conn
   import Phoenix.Controller
+
+  alias Alblog.Accounts.User
 
   @doc "Initializes the plug (required by the Plug specification)."
   def init(opts), do: opts
 
   @doc "Checks the user's admin status and redirects if unauthorized."
   def call(conn, _opts) do
+    # L'utente viene assegnato qui se la pipeline precedente ha funzionato
     current_user = conn.assigns[:current_user]
 
-    if current_user && Alblog.Accounts.User.is_admin?(current_user) do
+    # La chiamata ora usa l'alias: User.is_admin?(current_user)
+    if current_user && User.is_admin?(current_user) do
       conn
     else
       conn

@@ -2,7 +2,6 @@ defmodule AlblogWeb.Router do
   use AlblogWeb, :router
 
   import AlblogWeb.UserAuth
-  # Import is still correctly at the top
   import Phoenix.LiveDashboard.Router
 
   pipeline :browser do
