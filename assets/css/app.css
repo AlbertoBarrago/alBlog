@@ -14,7 +14,7 @@
    curl -sLO https://github.com/saadeghi/daisyui/releases/latest/download/daisyui.js
    Make sure to look at the daisyUI changelog: https://daisyui.com/docs/changelog/ */
 @plugin "../vendor/daisyui" {
-  themes: false;
+    themes: false;
 }
 
 /* daisyUI theme plugin. You can update this file by fetching the latest version with:
@@ -22,73 +22,73 @@
   We ship with two themes, a light one inspired on Phoenix colors and a dark one inspired
   on Elixir colors. Build your own at: https://daisyui.com/theme-generator/ */
 @plugin "../vendor/daisyui-theme" {
-  name: "dark";
-  default: false;
-  prefersdark: true;
-  color-scheme: "dark";
-  --color-base-100: oklch(22% 0.015 240);
-  --color-base-200: oklch(18% 0.012 240);
-  --color-base-300: oklch(14% 0.010 240);
-  --color-base-content: oklch(95% 0.020 240);
-  --color-primary: oklch(65% 0.18 195);
-  --color-primary-content: oklch(98% 0.01 195);
-  --color-secondary: oklch(68% 0.20 25);
-  --color-secondary-content: oklch(98% 0.01 25);
-  --color-accent: oklch(70% 0.25 290);
-  --color-accent-content: oklch(98% 0.01 290);
-  --color-neutral: oklch(30% 0.030 240);
-  --color-neutral-content: oklch(96% 0.010 240);
-  --color-info: oklch(65% 0.18 230);
-  --color-info-content: oklch(98% 0.01 230);
-  --color-success: oklch(65% 0.15 150);
-  --color-success-content: oklch(98% 0.01 150);
-  --color-warning: oklch(75% 0.18 80);
-  --color-warning-content: oklch(20% 0.02 80);
-  --color-error: oklch(62% 0.25 20);
-  --color-error-content: oklch(98% 0.01 20);
-  --radius-selector: 0.375rem;
-  --radius-field: 0.375rem;
-  --radius-box: 0.75rem;
-  --size-selector: 0.21875rem;
-  --size-field: 0.21875rem;
-  --border: 1.5px;
-  --depth: 1;
-  --noise: 0;
+    name: "dark";
+    default: false;
+    prefersdark: true;
+    color-scheme: "dark";
+    --color-base-100: oklch(22% 0.015 240);
+    --color-base-200: oklch(18% 0.012 240);
+    --color-base-300: oklch(14% 0.01 240);
+    --color-base-content: oklch(95% 0.02 240);
+    --color-primary: oklch(65% 0.18 195);
+    --color-primary-content: oklch(98% 0.01 195);
+    --color-secondary: oklch(68% 0.2 25);
+    --color-secondary-content: oklch(98% 0.01 25);
+    --color-accent: oklch(70% 0.25 290);
+    --color-accent-content: oklch(98% 0.01 290);
+    --color-neutral: oklch(30% 0.03 240);
+    --color-neutral-content: oklch(96% 0.01 240);
+    --color-info: oklch(65% 0.18 230);
+    --color-info-content: oklch(98% 0.01 230);
+    --color-success: oklch(65% 0.15 150);
+    --color-success-content: oklch(98% 0.01 150);
+    --color-warning: oklch(75% 0.18 80);
+    --color-warning-content: oklch(20% 0.02 80);
+    --color-error: oklch(62% 0.25 20);
+    --color-error-content: oklch(98% 0.01 20);
+    --radius-selector: 0.375rem;
+    --radius-field: 0.375rem;
+    --radius-box: 0.75rem;
+    --size-selector: 0.21875rem;
+    --size-field: 0.21875rem;
+    --border: 1.5px;
+    --depth: 1;
+    --noise: 0;
 }
 
 @plugin "../vendor/daisyui-theme" {
-  name: "light";
-  default: true;
-  prefersdark: false;
-  color-scheme: "light";
-  --color-base-100: oklch(99% 0 0);
-  --color-base-200: oklch(96% 0.005 240);
-  --color-base-300: oklch(92% 0.008 240);
-  --color-base-content: oklch(25% 0.015 240);
-  --color-primary: oklch(55% 0.20 195);
-  --color-primary-content: oklch(99% 0.01 195);
-  --color-secondary: oklch(60% 0.22 25);
-  --color-secondary-content: oklch(99% 0.01 25);
-  --color-accent: oklch(60% 0.28 290);
-  --color-accent-content: oklch(99% 0.01 290);
-  --color-neutral: oklch(35% 0.020 240);
-  --color-neutral-content: oklch(98% 0.005 240);
-  --color-info: oklch(60% 0.20 230);
-  --color-info-content: oklch(99% 0.01 230);
-  --color-success: oklch(60% 0.18 150);
-  --color-success-content: oklch(99% 0.01 150);
-  --color-warning: oklch(70% 0.20 80);
-  --color-warning-content: oklch(20% 0.02 80);
-  --color-error: oklch(58% 0.28 20);
-  --color-error-content: oklch(99% 0.01 20);
-  --radius-selector: 0.375rem;
-  --radius-field: 0.375rem;
-  --radius-box: 0.75rem;
-  --size-selector: 0.21875rem;
-  --size-field: 0.21875rem;
-  --border: 1.5px;
-  --depth: 1;
-  --noise: 0;
+    name: "light";
+    default: true;
+    prefersdark: false;
+    color-scheme: "light";
+    --color-base-100: oklch(99% 0 0);
+    --color-base-200: oklch(96% 0.005 240);
+    --color-base-300: oklch(92% 0.008 240);
+    --color-base-content: oklch(25% 0.015 240);
+    --color-primary: oklch(55% 0.2 195);
+    --color-primary-content: oklch(99% 0.01 195);
+    --color-secondary: oklch(60% 0.22 25);
+    --color-secondary-content: oklch(99% 0.01 25);
+    --color-accent: oklch(60% 0.28 290);
+    --color-accent-content: oklch(99% 0.01 290);
+    --color-neutral: oklch(35% 0.02 240);
+    --color-neutral-content: oklch(98% 0.005 240);
+    --color-info: oklch(60% 0.2 230);
+    --color-info-content: oklch(99% 0.01 230);
+    --color-success: oklch(60% 0.18 150);
+    --color-success-content: oklch(99% 0.01 150);
+    --color-warning: oklch(70% 0.2 80);
+    --color-warning-content: oklch(20% 0.02 80);
+    --color-error: oklch(58% 0.28 20);
+    --color-error-content: oklch(99% 0.01 20);
+    --radius-selector: 0.375rem;
+    --radius-field: 0.375rem;
+    --radius-box: 0.75rem;
+    --size-selector: 0.21875rem;
+    --size-field: 0.21875rem;
+    --border: 1.5px;
+    --depth: 1;
+    --noise: 0;
 }
 
 /* Add variants based on LiveView classes */
@@ -102,176 +102,229 @@
 /* Make LiveView wrapper divs transparent for layout */
 [data-phx-session],
 [data-phx-teleported-src] {
-  display: contents
+    display: contents;
 }
 
 *,
 body {
-  font-family: "Roboto", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: 300;
-  font-style: normal;
-  font-variation-settings:
-    "wdth" 100;
+    font-family: "Roboto", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 300;
+    font-style: normal;
+    font-variation-settings: "wdth" 100;
 }
 
 /* This file is for your main application CSS */
 
 /* Code block styling for markdown with syntax highlighting */
 .prose pre {
-  @apply rounded-lg p-4 overflow-x-auto my-4 shadow-lg;
-  background: transparent !important;
-  position: relative;
+    @apply rounded-lg p-4 overflow-x-auto my-4 shadow-lg;
+    background: transparent !important;
+    position: relative;
 }
 
 .prose code {
-  @apply font-mono text-sm;
+    @apply font-mono text-sm;
 }
 
 .prose pre code {
-  @apply bg-transparent p-0;
+    @apply bg-transparent p-0;
 }
 
-.prose :not(pre)>code {
-  @apply bg-base-200 px-1.5 py-0.5 rounded text-primary font-semibold;
+.prose :not(pre) > code {
+    @apply bg-base-200 px-1.5 py-0.5 rounded text-primary font-semibold;
 }
 
 /* Copy code button */
 .prose pre .copy-code-button {
-  position: absolute;
-  top: 0.5rem;
-  right: 0.5rem;
-  padding: 0.375rem 0.75rem;
-  background: rgba(0, 0, 0, 0.3);
-  color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 0.375rem;
-  font-size: 0.75rem;
-  font-weight: 500;
-  cursor: pointer;
-  opacity: 0;
-  transition: opacity 0.2s ease, background 0.2s ease;
-  backdrop-filter: blur(4px);
-  z-index: 10;
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    padding: 0.375rem 0.75rem;
+    background: rgba(0, 0, 0, 0.3);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 0.375rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    cursor: pointer;
+    opacity: 0;
+    transition:
+        opacity 0.2s ease,
+        background 0.2s ease;
+    backdrop-filter: blur(4px);
+    z-index: 10;
 }
 
 .prose pre:hover .copy-code-button {
-  opacity: 1;
+    opacity: 1;
 }
 
 .prose pre .copy-code-button:hover {
-  background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.5);
 }
 
 .prose pre .copy-code-button:active {
-  transform: scale(0.95);
+    transform: scale(0.95);
 }
 
 .prose pre .copy-code-button.copied {
-  background: rgba(34, 197, 94, 0.5);
-  border-color: rgba(34, 197, 94, 0.6);
+    background: rgba(34, 197, 94, 0.5);
+    border-color: rgba(34, 197, 94, 0.6);
 }
 
 /* Override Prism theme for dark mode */
-[data-theme="dark"] .prose :not(pre)>code {
-  @apply bg-base-300 text-primary;
+[data-theme="dark"] .prose :not(pre) > code {
+    @apply bg-base-300 text-primary;
 }
 
 [data-theme="dark"] .prose pre .copy-code-button {
-  background: rgba(255, 255, 255, 0.1);
-  color: #e6edf3;
-  border-color: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.1);
+    color: #e6edf3;
+    border-color: rgba(255, 255, 255, 0.2);
 }
 
 [data-theme="dark"] .prose pre .copy-code-button:hover {
-  background: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.2);
 }
 
 /* Override Prism theme for light mode */
-[data-theme="light"] .prose :not(pre)>code {
-  @apply bg-base-200 text-primary;
+[data-theme="light"] .prose :not(pre) > code {
+    @apply bg-base-200 text-primary;
 }
 
 [data-theme="light"] .prose pre .copy-code-button {
-  background: rgba(0, 0, 0, 0.1);
-  color: #24292f;
-  border-color: rgba(0, 0, 0, 0.2);
+    background: rgba(0, 0, 0, 0.1);
+    color: #24292f;
+    border-color: rgba(0, 0, 0, 0.2);
 }
 
 [data-theme="light"] .prose pre .copy-code-button:hover {
-  background: rgba(0, 0, 0, 0.2);
+    background: rgba(0, 0, 0, 0.2);
 }
 
 /* Enhanced heading styles for markdown */
 .prose h1 {
-  @apply font-extrabold text-base-content border-b-2 border-primary/30 pb-3 mb-6 mt-8;
+    @apply font-extrabold text-base-content border-b-2 border-primary/30 pb-3 mb-6 mt-8;
 }
 
 .prose h2 {
-  @apply font-bold text-base-content border-b-2 border-base-content/20 pb-2 mb-5 mt-7;
+    @apply font-bold text-base-content border-b-2 border-base-content/20 pb-2 mb-5 mt-7;
 }
 
 .prose h3 {
-  @apply font-bold text-base-content border-b border-base-content/10 pb-2 mb-4 mt-6;
+    @apply font-bold text-base-content border-b border-base-content/10 pb-2 mb-4 mt-6;
 }
 
 .prose h4 {
-  @apply font-semibold text-base-content pb-1 mb-3 mt-5;
+    @apply font-semibold text-base-content pb-1 mb-3 mt-5;
 }
 
 /* Enhanced blockquote styles for markdown */
 .prose blockquote {
-  @apply border-l-4 border-primary/50 bg-base-200/50 pl-4 pr-4 py-3 my-4 italic text-base-content/80 rounded-r;
+    @apply border-l-4 border-primary/50 bg-base-200/50 pl-4 pr-4 py-3 my-4 italic text-base-content/80 rounded-r;
 }
 
 /* Horizontal rule spacing */
 .prose hr {
-  @apply my-6 border-base-content/20;
+    @apply my-6 border-base-content/20;
 }
 
 .prose blockquote p {
-  @apply my-2;
+    @apply my-2;
 }
 
 /* Ensure strong and em are distinct despite global font-weight reset */
 .prose strong {
-  font-weight: 700;
+    font-weight: 700;
 }
 
 .prose em {
-  font-style: italic;
+    font-style: italic;
 }
 
 /* Dark mode specific adjustments for headings and blockquotes */
 [data-theme="dark"] .prose h1 {
-  @apply border-primary/40;
+    @apply border-primary/40;
 }
 
 [data-theme="dark"] .prose h2 {
-  @apply border-base-content/15;
+    @apply border-base-content/15;
 }
 
 [data-theme="dark"] .prose h3 {
-  @apply border-base-content/10;
+    @apply border-base-content/10;
 }
 
 [data-theme="dark"] .prose blockquote {
-  @apply border-primary/60 bg-base-200/30;
+    @apply border-primary/60 bg-base-200/30;
 }
 
 /* Light mode specific adjustments for headings and blockquotes */
 [data-theme="light"] .prose h1 {
-  @apply border-primary/25;
+    @apply border-primary/25;
 }
 
 [data-theme="light"] .prose h2 {
-  @apply border-base-content/15;
+    @apply border-base-content/15;
 }
 
 [data-theme="light"] .prose h3 {
-  @apply border-base-content/10;
+    @apply border-base-content/10;
 }
 
 [data-theme="light"] .prose blockquote {
-  @apply border-primary/40 bg-base-200/60;
+    @apply border-primary/40 bg-base-200/60;
+}
+
+[data-theme="light"] .markdown-link {
+    font-weight: bold;
+    color: #007bff;
+    text-decoration: underline;
+    text-decoration-color: rgba(0, 123, 255, 0.5);
+
+    padding-right: 18px;
+    position: relative;
+}
+
+[data-theme="light"] .markdown-link::after {
+    content: " 🔗";
+    font-size: 0.8em;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #495057;
+}
+
+/* Stato Hover */
+[data-theme="light"] .markdown-link:hover {
+    color: #0056b3;
+    text-decoration-color: #0056b3;
+}
+
+[data-theme="dark"] .markdown-link {
+    font-weight: bold;
+    color: #80aeff;
+    text-decoration: underline;
+    text-decoration-color: rgba(128, 174, 255, 0.6);
+
+    padding-right: 18px;
+    position: relative;
+}
+
+[data-theme="dark"] .markdown-link::after {
+    content: " 🔗";
+    font-size: 0.8em;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #ced4da;
+}
+
+/* Stato Hover */
+[data-theme="dark"] .markdown-link:hover {
+    color: #c3daff;
+    text-decoration-color: #c3daff;
 }

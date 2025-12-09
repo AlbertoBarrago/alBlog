@@ -20,8 +20,7 @@ defmodule AlblogWeb.MarkdownHelper do
   def to_html(nil), do: ""
 
   defp preprocess_markdown(markdown) do
-    # Split by code blocks to avoid modifying code
-    # Regex matches ```...``` blocks or inline `...` code
+    # 1. Split by code blocks to avoid modifying code within them
     parts = Regex.split(~r/(`{1,3}.*?`{1,3})/s, markdown, include_captures: true)
 
     parts
@@ -29,9 +28,20 @@ defmodule AlblogWeb.MarkdownHelper do
       if String.starts_with?(part, "`") do
         part
       else
-        # Replace *text* with **text**, but not * at start of line (lists)
-        # and not **text** (already bold)
-        Regex.replace(~r/(?<!\*)\*([^\s*](?:[^*]*[^\s*])?)\*(?!\*)/, part, "**\\1**")
+        # --- 1. Handle Markdown Links: Convert [Text](URL) to <a href="URL" class="markdown-link">Text</a> ---
+        modified_part =
+          Regex.replace(
+            ~r/\[(.*?)\]\((.*?)\)/,
+            part,
+            fn _match, link_text, url ->
+              # Use "markdown-link" as the custom class
+              "<a href=\"#{url}\" class=\"markdown-link\">#{link_text}</a>"
+            end
+          )
+
+        # --- 2. Handle Emphasis (if still needed) ---
+        # Replace *text* with **text**
+        Regex.replace(~r/(?<!\*)\*([^\s*](?:[^*]*[^\s*])?)\*(?!\*)/, modified_part, "**\\1**")
       end
     end)
     |> Enum.join("")
