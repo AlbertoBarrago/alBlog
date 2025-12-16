@@ -10,6 +10,7 @@ defmodule AlblogWeb.ArticleLive.Index do
       <.header>
         <div class="flex flex-col items-center mb-2">
           <h1 class="text-3xl font-bold text-primary">Articles</h1>
+          <p class="text-base-content/30">Filtering clicking on tag</p>
           <%= if @active_tag do %>
             <div class="flex items-center gap-2">
               <span class="text-base-content/70">Filtering by tag:</span>

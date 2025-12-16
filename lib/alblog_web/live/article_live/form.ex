@@ -31,7 +31,9 @@ defmodule AlblogWeb.ArticleLive.Form do
     "Linux",
     "Windows",
     "MacOS",
-    "SideProject"
+    "SideProject",
+    "Guide",
+    "Miscellaneous"
   ]
 
   @impl true
