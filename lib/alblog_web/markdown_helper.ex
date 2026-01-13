@@ -15,12 +15,13 @@ defmodule AlblogWeb.MarkdownHelper do
       smartypants: true,
       gfm: true
     })
+    |> postprocess_links()
   end
 
   def to_html(nil), do: ""
 
   defp preprocess_markdown(markdown) do
-    # 1. Split by code blocks to avoid modifying code within them
+    # Split by code blocks to avoid modifying code within them
     parts = Regex.split(~r/(`{1,3}.*?`{1,3})/s, markdown, include_captures: true)
 
     parts
@@ -28,26 +29,19 @@ defmodule AlblogWeb.MarkdownHelper do
       if String.starts_with?(part, "`") do
         part
       else
-        # --- 1. Handle Markdown Links: Convert [Text](URL) to <a href="URL" class="markdown-link">Text</a> ---
-        modified_part =
-          Regex.replace(
-            ~r/\[(.*?)\]\((.*?)\)/,
-            part,
-            fn _match, link_text, url ->
-              cleaned_url =
-                url
-                |> String.replace(~r/["“”]/, "")
-                |> String.trim()
-
-              "<a href=\"#{cleaned_url}\" target=\"_blank\" class=\"markdown-link\">#{link_text}</a>"
-            end
-          )
-
-        # --- 2. Handle Emphasis (if still needed) ---
-        # Replace *text* with **text**
-        Regex.replace(~r/(?<!\*)\*([^\s*](?:[^*]*[^\s*])?)\*(?!\*)/, modified_part, "**\\1**")
+        # Handle Emphasis: Replace *text* with **text**
+        Regex.replace(~r/(?<!\*)\*([^\s*](?:[^*]*[^\s*])?)\*(?!\*)/, part, "**\\1**")
       end
     end)
     |> Enum.join("")
+  end
+
+  # Add target="_blank" and class="markdown-link" to all anchor tags after Earmark processing
+  defp postprocess_links(html) do
+    Regex.replace(
+      ~r/<a href="([^"]+)">/,
+      html,
+      "<a href=\"\\1\" target=\"_blank\" class=\"markdown-link\">"
+    )
   end
 end
