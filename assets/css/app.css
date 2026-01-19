@@ -243,6 +243,45 @@ body {
     font-style: italic;
 }
 
+/* List styling for markdown */
+.prose ul,
+.prose ol {
+    @apply my-4 pl-6;
+}
+
+.prose ul {
+    @apply list-disc;
+}
+
+.prose ol {
+    @apply list-decimal;
+}
+
+.prose li {
+    @apply my-2 text-base-content;
+}
+
+.prose ul > li {
+    @apply pl-2;
+}
+
+.prose ol > li {
+    @apply pl-2;
+}
+
+/* Nested lists */
+.prose ul ul,
+.prose ol ol,
+.prose ul ol,
+.prose ol ul {
+    @apply my-2 pl-4;
+}
+
+.prose li > ul,
+.prose li > ol {
+    @apply my-2;
+}
+
 /* Dark mode specific adjustments for headings and blockquotes */
 [data-theme="dark"] .prose h1 {
     @apply border-primary/40;
@@ -327,4 +366,14 @@ body {
 [data-theme="dark"] .markdown-link:hover {
     color: #c3daff;
     text-decoration-color: #c3daff;
+}
+
+/* Enhanced paragraph spacing */
+.prose p {
+    @apply my-3 leading-relaxed;
+}
+
+/* Improve text rendering in prose for better legibility */
+.prose {
+    @apply text-base leading-relaxed;
 }

@@ -52,54 +52,57 @@ defmodule AlblogWeb.ArticleLive.Form do
         <:subtitle>Use this form to manage article records in your database.</:subtitle>
       </.header>
 
-      <.form for={@form} id="article-form" phx-change="validate" phx-submit="save">
+      <.form
+        for={@form}
+        id="article-form"
+        phx-change="validate"
+        phx-submit="save"
+        class="h-full flex flex-col"
+      >
         <.input field={@form[:title]} type="text" label="Title" />
         <.input field={@form[:slug]} type="text" label="Slug" disabled />
 
-        <div class="fieldset mb-2">
-          <label>
-            <div class="flex items-center justify-between mb-1">
-              <span class="label">Content</span>
-              <button
-                type="button"
-                phx-click="toggle_preview"
-                disabled={!@form[:content].value || @form[:content].value == ""}
-                class={[
-                  "text-sm font-medium transition-colors",
-                  (!@form[:content].value || @form[:content].value == "") &&
-                    "text-base-content/40 cursor-not-allowed",
-                  @form[:content].value && @form[:content].value != "" &&
-                    "text-primary hover:text-primary-focus"
-                ]}
-              >
-                {if @preview_mode, do: "Edit", else: "Preview"}
-              </button>
-            </div>
-            <%= if @preview_mode do %>
-              <div
-                class="prose prose-slate max-w-none p-4 border rounded-md bg-base-100 min-h-[16rem]"
-                tabindex="-1"
-              >
-                {AlblogWeb.MarkdownHelper.to_html(@form[:content].value) |> Phoenix.HTML.raw()}
+        <%!-- Content Editor with Split Panel --%>
+        <div class="fieldset mb-2 flex-1 flex flex-col min-h-0">
+          <label class="flex flex-col flex-1 min-h-0">
+            <span class="label mb-1">Content</span>
+            <div class="flex-1 grid grid-cols-2 gap-4 min-h-0">
+              <%!-- Editor Panel --%>
+              <div class="flex flex-col min-h-0 border rounded-md bg-base-100">
+                <div class="px-3 py-2 border-b text-sm font-medium text-base-content/60">
+                  Markdown Editor
+                </div>
+                <textarea
+                  id={@form[:content].id}
+                  name={@form[:content].name}
+                  class="flex-1 p-3 resize-none focus:outline-none bg-base-100 text-base-content font-mono text-sm"
+                  spellcheck="false"
+                ><%= Phoenix.HTML.Form.normalize_value("textarea", @form[:content].value) %></textarea>
               </div>
-              <input type="hidden" name={@form[:content].name} value={@form[:content].value} />
-            <% else %>
-              <textarea
-                id={@form[:content].id}
-                name={@form[:content].name}
-                class="textarea textarea-bordered w-full h-64"
-              ><%= Phoenix.HTML.Form.normalize_value("textarea", @form[:content].value) %></textarea>
-            <% end %>
+
+              <%!-- Preview Panel --%>
+              <div class="flex flex-col min-h-0 border rounded-md bg-base-100 overflow-hidden">
+                <div class="px-3 py-2 border-b text-sm font-medium text-base-content/60">
+                  Live Preview
+                </div>
+                <div
+                  class="prose prose-base max-w-none flex-1 overflow-auto p-4 text-base-content leading-relaxed"
+                  tabindex="-1"
+                >
+                  {AlblogWeb.MarkdownHelper.to_html(@form[:content].value) |> Phoenix.HTML.raw()}
+                </div>
+              </div>
+            </div>
           </label>
           <%= for error <- @form[:content].errors do %>
-            <p class="mt-1.5 flex gap-2 items-center text-sm text-error">
+            <p class="mt-2 flex gap-2 items-center text-sm text-error">
               <.icon name="hero-exclamation-circle" class="size-5" />
               {translate_error(error)}
             </p>
           <% end %>
         </div>
 
-        <div class="fieldset mb-2">
+        <div class="fieldset mb-4">
           <label>
             <span class="label mb-1">Categories (Tags)</span>
             <div class="relative">
@@ -168,7 +171,7 @@ defmodule AlblogWeb.ArticleLive.Form do
           </label>
         </div>
 
-        <footer class="mt-4 flex gap-3">
+        <footer class="flex gap-3 mt-auto pt-4 border-t">
           <.button phx-disable-with="Saving..." variant="primary">Save Article</.button>
           <.button navigate={return_path(@current_scope, @return_to, @article)}>Cancel</.button>
         </footer>
@@ -187,7 +190,6 @@ defmodule AlblogWeb.ArticleLive.Form do
        |> assign(:return_to, return_to(params["return_to"]))
        |> assign(:current_tag, "")
        |> assign(:filtered_tags, @allowed_tags)
-       |> assign(:preview_mode, false)
        |> apply_action(socket.assigns.live_action, params)}
     else
       {:ok,
@@ -332,10 +334,6 @@ defmodule AlblogWeb.ArticleLive.Form do
      socket
      |> assign(:tags, new_tags)
      |> assign(:form, to_form(changeset))}
-  end
-
-  def handle_event("toggle_preview", _, socket) do
-    {:noreply, assign(socket, preview_mode: not socket.assigns.preview_mode)}
   end
 
   def handle_event("save", %{"article" => article_params}, socket) do
