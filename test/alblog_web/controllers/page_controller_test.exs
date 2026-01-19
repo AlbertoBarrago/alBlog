@@ -3,6 +3,6 @@ defmodule AlblogWeb.PageControllerTest do
 
   test "GET /", %{conn: conn} do
     conn = get(conn, ~p"/")
-    assert html_response(conn, 200) =~ "Software insights from a decade in the trenches"
+    assert html_response(conn, 200) =~ "Debugging life one commit at a time"
   end
 end

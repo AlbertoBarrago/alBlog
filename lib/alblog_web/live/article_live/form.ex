@@ -10,6 +10,7 @@ defmodule AlblogWeb.ArticleLive.Form do
     "HTML",
     "CSS",
     "JS",
+    "JavaScript",
     "Python",
     "C",
     "C++",
