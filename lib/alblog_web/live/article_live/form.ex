@@ -14,6 +14,7 @@ defmodule AlblogWeb.ArticleLive.Form do
     "Python",
     "C",
     "C++",
+    "Career",
     "Assembly",
     "Terminal",
     "Angular",
@@ -38,7 +39,8 @@ defmodule AlblogWeb.ArticleLive.Form do
     "MacOS",
     "SideProject",
     "Guide",
-    "Miscellaneous"
+    "Miscellaneous",
+    "Open-to-work"
   ]
 
   @impl true
