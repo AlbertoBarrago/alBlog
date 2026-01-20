@@ -13,8 +13,8 @@ defmodule Alblog.Application do
       {DNSCluster, query: Application.get_env(:alblog, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: Alblog.PubSub},
       AlblogWeb.Presence,
-      # Start a worker by calling: Alblog.Worker.start_link(arg)
-      # {Alblog.Worker, arg},
+      # Daily visit digest email scheduler
+      Alblog.Blog.VisitDigestScheduler,
       # Start to serve requests, typically the last entry
       AlblogWeb.Endpoint
     ]

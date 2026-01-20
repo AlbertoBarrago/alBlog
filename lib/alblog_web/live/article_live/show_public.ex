@@ -2,6 +2,7 @@ defmodule AlblogWeb.ArticleLive.ShowPublic do
   use AlblogWeb, :live_view
 
   alias Alblog.Blog
+  alias Alblog.Blog.Comment
   alias AlblogWeb.Presence
 
   @topic "article_presence"
@@ -11,6 +12,9 @@ defmodule AlblogWeb.ArticleLive.ShowPublic do
     if connected?(socket) do
       # Subscribe to the topic
       Phoenix.PubSub.subscribe(Alblog.PubSub, "#{@topic}:#{id}")
+
+      # Subscribe to comment updates
+      Blog.subscribe_comments(id)
 
       # Subscribe to article updates if user is logged in
       if socket.assigns[:current_scope] do
@@ -22,15 +26,21 @@ defmodule AlblogWeb.ArticleLive.ShowPublic do
         Presence.track(self(), "#{@topic}:#{id}", socket.id, %{
           online_at: inspect(System.system_time(:second))
         })
+
+      # Record article visit for daily digest
+      Blog.record_article_visit(String.to_integer(id))
     end
 
     article = Blog.get_article!(id)
+    comments = Blog.list_comments(id)
 
     {:ok,
      socket
      |> assign(:article, article)
      |> assign(:reader_count, get_reader_count(id))
-     |> assign(:page_title, article.title)}
+     |> assign(:page_title, article.title)
+     |> assign(:comment_form, to_form(Blog.change_comment(%Comment{})))
+     |> stream(:comments, comments)}
   end
 
   @impl true
@@ -44,6 +54,46 @@ defmodule AlblogWeb.ArticleLive.ShowPublic do
 
       {:error, _changeset} ->
         {:noreply, put_flash(socket, :error, "Failed to delete article.")}
+    end
+  end
+
+  def handle_event("validate_comment", %{"comment" => comment_params}, socket) do
+    changeset =
+      %Comment{}
+      |> Blog.change_comment(comment_params)
+      |> Map.put(:action, :validate)
+
+    {:noreply, assign(socket, :comment_form, to_form(changeset))}
+  end
+
+  def handle_event("save_comment", %{"comment" => comment_params}, socket) do
+    case socket.assigns[:current_scope] do
+      nil ->
+        {:noreply, put_flash(socket, :error, "You must be logged in to comment.")}
+
+      scope ->
+        case Blog.create_comment(scope, socket.assigns.article, comment_params) do
+          {:ok, _comment} ->
+            {:noreply,
+             socket
+             |> assign(:comment_form, to_form(Blog.change_comment(%Comment{})))
+             |> put_flash(:info, "Comment added successfully!")}
+
+          {:error, %Ecto.Changeset{} = changeset} ->
+            {:noreply, assign(socket, :comment_form, to_form(changeset))}
+        end
+    end
+  end
+
+  def handle_event("delete_comment", %{"id" => id}, socket) do
+    comment = Blog.get_comment!(id)
+
+    case Blog.delete_comment(socket.assigns.current_scope, comment) do
+      {:ok, _comment} ->
+        {:noreply, put_flash(socket, :info, "Comment deleted.")}
+
+      {:error, :unauthorized} ->
+        {:noreply, put_flash(socket, :error, "You can only delete your own comments.")}
     end
   end
 
@@ -71,6 +121,19 @@ defmodule AlblogWeb.ArticleLive.ShowPublic do
 
   def handle_info({type, %Alblog.Blog.Article{}}, socket)
       when type in [:created, :updated, :deleted] do
+    {:noreply, socket}
+  end
+
+  def handle_info({:comment_created, comment}, socket) do
+    {:noreply, stream_insert(socket, :comments, comment)}
+  end
+
+  def handle_info({:comment_deleted, comment}, socket) do
+    {:noreply, stream_delete(socket, :comments, comment)}
+  end
+
+  # Catch-all for unexpected messages (e.g., from async tasks in tests)
+  def handle_info(_msg, socket) do
     {:noreply, socket}
   end
 
@@ -162,6 +225,79 @@ defmodule AlblogWeb.ArticleLive.ShowPublic do
           <.link navigate={~p"/articles"} class="btn btn-outline btn-sm">
             Read more articles
           </.link>
+        </div>
+      </div>
+
+      <div class="mt-12 pt-8 border-t border-base-300">
+        <h2 class="text-2xl font-bold text-base-content mb-6 flex items-center gap-2">
+          <.icon name="hero-chat-bubble-left-right" class="w-6 h-6" /> Comments
+        </h2>
+
+        <%= if Map.get(assigns, :current_scope) do %>
+          <.form
+            for={@comment_form}
+            id="comment-form"
+            phx-change="validate_comment"
+            phx-submit="save_comment"
+            class="mb-8"
+          >
+            <div class="flex flex-col gap-3">
+              <.input
+                field={@comment_form[:body]}
+                type="textarea"
+                placeholder="Write a comment..."
+                rows="3"
+                class="textarea textarea-bordered w-full bg-base-200 focus:bg-base-100 transition"
+              />
+              <div class="flex justify-end">
+                <button type="submit" class="btn btn-primary btn-sm">
+                  <.icon name="hero-paper-airplane" class="w-4 h-4" /> Post Comment
+                </button>
+              </div>
+            </div>
+          </.form>
+        <% else %>
+          <div class="mb-8 p-4 bg-base-200 rounded-lg text-center">
+            <p class="text-base-content/70">
+              <.link navigate={~p"/users/log-in"} class="link link-primary font-medium">
+                Log in
+              </.link>
+              to join the discussion.
+            </p>
+          </div>
+        <% end %>
+
+        <div id="comments" phx-update="stream" class="space-y-4">
+          <div id="comments-empty" class="hidden only:block text-center py-8 text-base-content/50">
+            No comments yet. Be the first to share your thoughts!
+          </div>
+          <div
+            :for={{dom_id, comment} <- @streams.comments}
+            id={dom_id}
+            class="bg-base-200 rounded-lg p-4 transition hover:bg-base-200/80"
+          >
+            <div class="flex justify-between items-start gap-4">
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 mb-2">
+                  <span class="font-semibold text-base-content">{comment.user.username}</span>
+                  <span class="text-xs text-base-content/50">
+                    {Calendar.strftime(comment.inserted_at, "%d %b %Y at %H:%M")}
+                  </span>
+                </div>
+                <p class="text-base-content/80 whitespace-pre-wrap break-words">{comment.body}</p>
+              </div>
+              <%= if Map.get(assigns, :current_scope) && (comment.user_id == @current_scope.user.id || @current_scope.user.role == "admin") do %>
+                <button
+                  phx-click="delete_comment"
+                  phx-value-id={comment.id}
+                  data-confirm="Delete this comment?"
+                  class="btn btn-ghost btn-xs text-error hover:bg-error/10 flex-shrink-0"
+                >
+                  <.icon name="hero-trash" class="w-4 h-4" />
+                </button>
+              <% end %>
+            </div>
+          </div>
         </div>
       </div>
     </div>
